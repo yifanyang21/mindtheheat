@@ -211,7 +211,7 @@ function switchToLightMode() {
 }
 
 async function initMap() {
-    neighborhoodData = await loadGeoJson('data/buurt.geojson');
+    neighborhoodData = await loadGeoJson('./data/buurt.geojson');
     neighborhoodLayer = L.geoJSON(neighborhoodData, {
         style: { color: 'grey', weight: 0.8, fillOpacity: 0.0, fillColor: getWhite() },
         onEachFeature: function (feature, layer) {
@@ -256,7 +256,7 @@ async function initMap() {
     });
 
     streetNetworkData = await loadGeoJson('https://drive.google.com/file/d/1xXFxCsCq9YDVlI7TH7li55K1itS1xVY4/view?usp=sharing');
-    clusterData = await loadGeoJson('data/gdf_simple_clusters.geojson');
+    clusterData = await loadGeoJson('./data/gdf_simple_clusters.geojson');
 
     updateMap('all');
 
