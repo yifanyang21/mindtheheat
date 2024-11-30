@@ -26,8 +26,11 @@ async function loadGeoJson(url) {
 }
 
 async function loadMapboxTileset(tileset) {
-    const url = `https://api.mapbox.com/v4/${tileset}/tiles.json?access_token=${mapboxAccessToken}`;
+    const url = `https://api.mapbox.com/v4/${tileset}/features.json?access_token=${mapboxAccessToken}`;
     const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Failed to load tileset: ${response.statusText}`);
+    }
     return response.json();
 }
 
