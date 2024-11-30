@@ -15,21 +15,20 @@ let neighborhoodData = null;
 let streetNetworkData = null;
 let clusterData = null;
 
+const mapboxAccessToken = 'pk.eyJ1IjoieWFuZy15ZjE3IiwiYSI6ImNtNDJ1Z3ltODA0aHcyanNmaW8ydjhiNW0ifQ.7zS2UvwwamXU3I9xdvVy0w';
+const neighborhoodTileset = 'mapbox://yang-yf17.4mp5nxz4';
+const streetNetworkTileset = 'mapbox://yang-yf17.6w1az7z1';
+const clusterTileset = 'mapbox://yang-yf17.do3cunh0';
+
 async function loadGeoJson(url) {
-    try {
-        const response = await fetch(url, { mode: 'no-cors' });
-        if (!response.ok) {
-            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-        }
-        const arrayBuffer = await response.arrayBuffer();
-        const zip = await JSZip.loadAsync(arrayBuffer);
-        const fileName = Object.keys(zip.files)[0];
-        const jsonData = await zip.file(fileName).async("string");
-        return JSON.parse(jsonData);
-    } catch (error) {
-        console.error(`Error loading GeoJSON from ${url}:`, error);
-        throw error;
-    }
+    const response = await fetch(url);
+    return response.json();
+}
+
+async function loadMapboxTileset(tileset) {
+    const url = `https://api.mapbox.com/v4/${tileset}/tiles.json?access_token=${mapboxAccessToken}`;
+    const response = await fetch(url);
+    return response.json();
 }
 
 function filterStreetsByScore(data, minScore = 1) {
@@ -223,7 +222,7 @@ function switchToLightMode() {
 }
 
 async function initMap() {
-    neighborhoodData = await loadGeoJson('data/buurt.geojson');
+    neighborhoodData = await loadMapboxTileset(neighborhoodTileset);
     neighborhoodLayer = L.geoJSON(neighborhoodData, {
         style: { color: 'grey', weight: 0.8, fillOpacity: 0.0, fillColor: getWhite() },
         onEachFeature: function (feature, layer) {
@@ -267,8 +266,8 @@ async function initMap() {
         select.appendChild(option);
     });
 
-    streetNetworkData = await loadGeoJson('data/final_score_heat2.zip');
-    clusterData = await loadGeoJson('data/gdf_simple_clusters.geojson');
+    streetNetworkData = await loadMapboxTileset(streetNetworkTileset);
+    clusterData = await loadMapboxTileset(clusterTileset);
 
     updateMap('all');
 
