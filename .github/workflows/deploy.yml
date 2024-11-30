@@ -22,10 +22,10 @@ jobs:
 
     - name: Build your static site (if necessary)
       run: |
-        echo "Build steps here"  # 如果有构建步骤，添加它们
+        echo "Build steps here"  # 如果你的项目需要构建静态站点，请在这里添加构建步骤
 
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./  # 设置为包含LFS文件的目录
+        publish_dir: ./data  # 设置为包含LFS文件的目录
