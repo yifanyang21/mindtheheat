@@ -15,22 +15,8 @@ let neighborhoodData = null;
 let streetNetworkData = null;
 let clusterData = null;
 
-const mapboxAccessToken = 'pk.eyJ1IjoieWFuZy15ZjE3IiwiYSI6ImNtNDJ1Z3ltODA0aHcyanNmaW8ydjhiNW0ifQ.7zS2UvwwamXU3I9xdvVy0w';
-const neighborhoodTileset = 'mapbox://yang-yf17.4mp5nxz4';
-const streetNetworkTileset = 'mapbox://yang-yf17.6w1az7z1';
-const clusterTileset = 'mapbox://yang-yf17.do3cunh0';
-
 async function loadGeoJson(url) {
     const response = await fetch(url);
-    return response.json();
-}
-
-async function loadMapboxTileset(tileset) {
-    const url = `https://api.mapbox.com/v4/${tileset}/features.json?access_token=${mapboxAccessToken}`;
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`Failed to load tileset: ${response.statusText}`);
-    }
     return response.json();
 }
 
@@ -225,7 +211,7 @@ function switchToLightMode() {
 }
 
 async function initMap() {
-    neighborhoodData = await loadMapboxTileset(neighborhoodTileset);
+    neighborhoodData = await loadGeoJson('data/buurt.geojson');
     neighborhoodLayer = L.geoJSON(neighborhoodData, {
         style: { color: 'grey', weight: 0.8, fillOpacity: 0.0, fillColor: getWhite() },
         onEachFeature: function (feature, layer) {
@@ -269,8 +255,8 @@ async function initMap() {
         select.appendChild(option);
     });
 
-    streetNetworkData = await loadMapboxTileset(streetNetworkTileset);
-    clusterData = await loadMapboxTileset(clusterTileset);
+    streetNetworkData = await loadGeoJson('https://raw.githubusercontent.com/yifanyang21/mindtheheat/main/data/final_score_heat2.geojson');
+    clusterData = await loadGeoJson('data/gdf_simple_clusters.geojson');
 
     updateMap('all');
 
