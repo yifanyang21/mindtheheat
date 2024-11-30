@@ -16,7 +16,7 @@ let streetNetworkData = null;
 let clusterData = null;
 
 async function loadGeoJson(url) {
-    const response = await fetch(url);
+    const response = await fetch(url, { mode: 'no-cors' });
     return response.json();
 }
 
