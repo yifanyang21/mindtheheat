@@ -16,8 +16,20 @@ let streetNetworkData = null;
 let clusterData = null;
 
 async function loadGeoJson(url) {
-    const response = await fetch(url);
-    return response.json();
+    try {
+        const response = await fetch(url, { mode: 'no-cors' });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        const zip = await JSZip.loadAsync(arrayBuffer);
+        const fileName = Object.keys(zip.files)[0];
+        const jsonData = await zip.file(fileName).async("string");
+        return JSON.parse(jsonData);
+    } catch (error) {
+        console.error(`Error loading GeoJSON from ${url}:`, error);
+        throw error;
+    }
 }
 
 function filterStreetsByScore(data, minScore = 1) {
@@ -211,7 +223,7 @@ function switchToLightMode() {
 }
 
 async function initMap() {
-    neighborhoodData = await loadGeoJson('./data/buurt.geojson');
+    neighborhoodData = await loadGeoJson('data/buurt.geojson');
     neighborhoodLayer = L.geoJSON(neighborhoodData, {
         style: { color: 'grey', weight: 0.8, fillOpacity: 0.0, fillColor: getWhite() },
         onEachFeature: function (feature, layer) {
@@ -255,8 +267,8 @@ async function initMap() {
         select.appendChild(option);
     });
 
-    streetNetworkData = await loadGeoJson('https://drive.google.com/file/d/1xXFxCsCq9YDVlI7TH7li55K1itS1xVY4/view?usp=sharing');
-    clusterData = await loadGeoJson('./data/gdf_simple_clusters.geojson');
+    streetNetworkData = await loadGeoJson('data/final_score_heat2.zip');
+    clusterData = await loadGeoJson('data/gdf_simple_clusters.geojson');
 
     updateMap('all');
 

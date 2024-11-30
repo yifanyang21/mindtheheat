@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 </head>
 
 <body>
@@ -98,6 +99,11 @@
 
     <script src="map.js"></script>
     <script src="street.js"></script>
+    <script>
+        if (typeof ZOTERO_CONFIG === 'undefined') {
+            var ZOTERO_CONFIG = {};
+        }
+    </script>
     <script>
         document.body.classList.add('light-mode');
         document.getElementById('close-modal').addEventListener('click', function () {
