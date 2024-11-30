@@ -3,7 +3,7 @@ name: Deploy LFS files to GitHub Pages
 on:
   push:
     branches:
-      - main  # 你可以根据实际情况修改分支名
+      - main  
 
 jobs:
   deploy:
