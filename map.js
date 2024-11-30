@@ -255,7 +255,7 @@ async function initMap() {
         select.appendChild(option);
     });
 
-    streetNetworkData = await loadGeoJson('https://github.com/yifanyang21/mindtheheat/releases/download/v1/final_score_heat2.geojson');
+    streetNetworkData = await loadGeoJson('https://github.com/yifanyang21/mindtheheat/releases/download/v1.0/final_score_heat2.geojson');
     clusterData = await loadGeoJson('data/gdf_simple_clusters.geojson');
 
     updateMap('all');
