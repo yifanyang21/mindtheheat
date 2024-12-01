@@ -38,11 +38,11 @@ function filterStreetsByNeighborhood(neighborhood, data) {
 }
 
 function getStreetColor(score) {
-    if (score >= 1.9) return '#ff0000';
-    if (score >= 1.75) return '#ff4000';
-    if (score >= 1.35) return '#ff8000';
-    if (score >= 1) return '#ffbf00';
-    return 'grey';
+    if (score >= 1.9) return '#ff0000'; // Red
+    if (score >= 1.5) return '#ff8000'; // Orange
+    if (score >= 1.25) return '#ffbf00'; // Yellow
+    if (score >= 1) return '#f1eaa2'; // Light Yellow
+    return '#b4e0ea'; // Blue
 }
 
 function getStreetWeight_neighbor(usageCountMean) {
@@ -103,33 +103,78 @@ function createLegend() {
     const legend = document.createElement('div');
     legend.className = 'legend';
 
-    const colorItems = [
-        { color: getStreetColor(1.9), text: '>= 1.9' },
-        { color: getStreetColor(1.75), text: '1.75 ~ 1.9' },
-        { color: getStreetColor(1.35), text: '1.35 ~ 1.75' },
-        { color: getStreetColor(1), text: '1 ~ 1.35' },
-        { color: getStreetColor(0), text: '< 1' }
+    const heatStressSection = document.createElement('div');
+    heatStressSection.className = 'legend-section';
+
+    const heatStressTitle = document.createElement('div');
+    heatStressTitle.className = 'legend-title';
+    heatStressTitle.textContent = 'Heat Stress Risk';
+
+    const heatStressContent = document.createElement('div');
+    heatStressContent.className = 'legend-content';
+
+    const heatStressGradient = document.createElement('div');
+    heatStressGradient.className = 'legend-gradient';
+
+    const heatStressLabels = ['High risk', 'Medium risk', 'Low risk'];
+    const heatStressTextContainer = document.createElement('div');
+    heatStressTextContainer.className = 'legend-text-container';
+
+    heatStressLabels.forEach(label => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        const legendText = document.createElement('span');
+        legendText.textContent = label;
+        legendItem.appendChild(legendText);
+        heatStressTextContainer.appendChild(legendItem);
+    });
+
+    heatStressContent.appendChild(heatStressGradient);
+    heatStressContent.appendChild(heatStressTextContainer);
+    heatStressSection.appendChild(heatStressTitle);
+    heatStressSection.appendChild(heatStressContent);
+
+    const pedestrianFlowSection = document.createElement('div');
+    pedestrianFlowSection.className = 'legend-section';
+
+    const pedestrianFlowTitle = document.createElement('div');
+    pedestrianFlowTitle.className = 'legend-title';
+    pedestrianFlowTitle.textContent = 'Pedestrian Flow';
+
+    const pedestrianFlowContent = document.createElement('div');
+    pedestrianFlowContent.className = 'legend-content';
+
+    const pedestrianFlowLineContainer = document.createElement('div');
+    pedestrianFlowLineContainer.className = 'legend-line-container';
+
+    const flowLabels = [
+        { className: 'thick', text: 'High' },
+        { className: 'medium', text: 'Medium' },
+        { className: 'thin', text: 'Low' }
     ];
 
-    const colorSection = createLegendSection(
-        'Final Score',
-        colorItems,
-        item => createLegendItem({ backgroundColor: item.color }, item.text)
-    );
+    const pedestrianFlowTextContainer = document.createElement('div');
+    pedestrianFlowTextContainer.className = 'legend-text-container';
 
-    const thicknessItems = [
-        { height: '10px', text: 'High' },
-        { height: '2px', text: 'Low' }
-    ];
+    flowLabels.forEach(label => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        const legendLine = document.createElement('div');
+        legendLine.className = `legend-line ${label.className}`;
+        const legendText = document.createElement('span');
+        legendText.textContent = label.text;
+        legendItem.appendChild(legendText);
+        pedestrianFlowTextContainer.appendChild(legendItem);
+        pedestrianFlowLineContainer.appendChild(legendLine);
+    });
 
-    const thicknessSection = createLegendSection(
-        'Potential Usage',
-        thicknessItems,
-        item => createLegendItem({ height: item.height }, item.text)
-    );
+    pedestrianFlowContent.appendChild(pedestrianFlowLineContainer);
+    pedestrianFlowContent.appendChild(pedestrianFlowTextContainer);
+    pedestrianFlowSection.appendChild(pedestrianFlowTitle);
+    pedestrianFlowSection.appendChild(pedestrianFlowContent);
 
-    legend.appendChild(colorSection);
-    legend.appendChild(thicknessSection);
+    legend.appendChild(heatStressSection);
+    legend.appendChild(pedestrianFlowSection);
 
     document.body.appendChild(legend);
 }

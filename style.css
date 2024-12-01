@@ -48,28 +48,67 @@ html, body {
     font-size: 12px;
     display: flex;
     flex-direction: row;
-    width: 300px;
+    align-items: flex-start;
+    width: auto;
 }
 
-.legend .legend-section {
+.legend-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     margin-right: 20px;
 }
 
-.legend .legend-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-.legend .legend-line {
-    width: 30px;
-    height: 5px;
-    margin-right: 5px;
-}
-
-.legend .legend-title {
+.legend-title {
     font-weight: bold;
-    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.legend-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    height: 100px;
+}
+
+.legend-gradient {
+    width: 20px;
+    height: 100%;
+    background: linear-gradient(to bottom, #ff0000, #ff8000, #ffbf00, #f1eaa2, #b4e0ea);
+}
+
+.legend-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin-left: 10px;
+    width: 100px;
+}
+
+.legend-line-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    margin-left: 10px;
+}
+
+.legend-line {
+    width: 20px;
+    background-color: black;
+}
+
+.legend-line.thick {
+    height: 10px;
+}
+
+.legend-line.medium {
+    height: 7px;
+}
+
+.legend-line.thin {
+    height: 3px;
 }
 
 path.leaflet-interactive:focus {
@@ -251,7 +290,7 @@ body.dark-mode .box, body.dark-mode .controls, body.dark-mode .info-box, body.da
     color: #ffffff;
 }
 
-body.light-mode .box, body.light-mode .controls, body.light-mode .info-box, body.light-mode .modal-content {
+body.light-mode .box, body.light-mode .controls, body-light-mode .info-box, body-light-mode .modal-content {
     background-color: #ffffff;
     color: #000000;
 }
@@ -282,7 +321,7 @@ body.dark-mode .chart-section {
 body.dark-mode .chart-tick-label, body.dark-mode .chart-pointer-stroke {
     fill: #ffffff;
 }
-body.light-mode .chart-tick-label, body.light-mode .chart-pointer-stroke {
+body.light-mode .chart-tick-label, body-light-mode .chart-pointer-stroke {
     fill: #1e1e1e;
 }
 body.light-mode .chart-tick-stroke, body.dark-mode .chart-pointer-stroke {
