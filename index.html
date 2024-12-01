@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
 </head>
 
 <body>
@@ -57,6 +58,14 @@
                 </label>
             </div>
         </div>
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                    <input type="checkbox" id="cool-space-checkbox">
+                    Show Cool Space
+                </label>
+            </div>
+        </div>
     </div>
     <div id="map"></div>
     <div id="info-box" class="info-box box" style="display: none;">
@@ -91,6 +100,9 @@
                     <li>Click on streets to see more data and charts.</li>
                     <li>Use the reset button to return to the city view.</li>
                 </ul>
+                <p>We use 40% shade coverage and 35 Celcius PET Degrees as thresholds. Streets with shade coverage greater than 40% and PET Degrees less than 35 Celcius are considered low risk. The final score is the sum of the standardized scores of these two factors, and the street color reflects this score. </p>
+                <p>Pedestrian flow is also considered, represented by the street width.</p> 
+                <p>In the city view, we only show the top 4% high-risk streets, which we consider high priority. In neighborhood mode, you can view information for all streets. For more information, please click <a href="link">here</a>.</p>
                 <button id="close-modal" class="button got-it-button">Got it!</button>
             </div>
         </div>
@@ -123,6 +135,10 @@
         document.getElementById('cluster-checkbox').addEventListener('change', function () {
             const neighborhoodIndex = document.getElementById('neighborhood-select').value;
             updateMap(neighborhoodIndex === 'all' ? 'all' : parseInt(neighborhoodIndex));
+        });
+
+        document.getElementById('cool-space-checkbox').addEventListener('change', function () {
+            // Add functionality for "Show Cool Space" checkbox here
         });
     </script>
 </body>

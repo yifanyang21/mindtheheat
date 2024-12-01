@@ -1,5 +1,5 @@
 html, body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Roboto', Arial, Helvetica, sans-serif;
     height: 100%;
     margin: 0;
     overflow: hidden;
@@ -402,6 +402,16 @@ body.dark-mode .chart-tick-stroke, body.light-mode .chart-pointer-stroke {
 }
 
 .checkbox-container input {
+    margin-right: 5px;
+}
+
+.show-cool-space {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.show-cool-space input {
     margin-right: 5px;
 }
 

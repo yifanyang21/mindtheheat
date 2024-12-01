@@ -142,7 +142,7 @@ function updateMap(neighborhoodIndex) {
             map.removeLayer(clusterLayer);
         }
         clusterLayer = L.geoJSON(clusterData, {
-            style: { color: 'grey', weight: 2, fillOpacity: 0.3 }
+            style: { color: 'lightorange', weight: 1, fillOpacity: 0.3 }
         }).addTo(map);
     } else if (clusterLayer) {
         map.removeLayer(clusterLayer);
