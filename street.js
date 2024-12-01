@@ -1,11 +1,18 @@
-
-
 function addStreetInteractions(layer) {
     layer.on('mouseover', function (e) {
         const properties = e.target.feature.properties;
+        let riskLevel = 'Low risk';
+        if (properties.Final_score_all >= 1.9) {
+            riskLevel = 'High risk';
+        } else if (properties.Final_score_all >= 1.5) {
+            riskLevel = 'Medium risk';
+        }
+
+        const streetName = properties.name === 0 ? 'Unnamed' : properties.name;
+
         const tooltipContent = `
-            <strong>${properties.street_name}</strong><br>
-            Final Score: ${properties.Final_score_all}
+            <strong>${streetName}</strong><br>
+            <strong>${riskLevel}</strong> (${properties.Final_score_all})
         `;
         const tooltip = L.tooltip({
             permanent: false,
@@ -15,7 +22,7 @@ function addStreetInteractions(layer) {
             .setContent(tooltipContent)
             .setLatLng(e.latlng);
         layer.bindTooltip(tooltip).openTooltip();
-        layer.setStyle({ weight: 5, color: 'lightblue' });
+        layer.setStyle({ weight: 5, color: '#dcdcdc' });
     });
 
     layer.on('mouseout', function (e) {
@@ -25,33 +32,49 @@ function addStreetInteractions(layer) {
 
     layer.on('click', function (e) {
         const properties = e.target.feature.properties;
+        let riskLevel = 'Low risk';
+        if (properties.Final_score_all >= 1.9) {
+            riskLevel = 'High risk';
+        } else if (properties.Final_score_all >= 1.5) {
+            riskLevel = 'Medium risk';
+        }
+
+        const streetName = properties.name === 0 ? 'Unnamed' : properties.name;
+
+        let flowLevel = 'Low flow';
+        if (properties.usage_count_mean >= 1000) {
+            flowLevel = 'High flow';
+        } else if (properties.usage_count_mean >= 250) {
+            flowLevel = 'Medium flow';
+        }
+
         const infoBox = document.getElementById('info-box');
         infoBox.innerHTML = `
             <button class="close-button" onclick="closeInfoBox()">
                 <img src="img/right.png" alt="Close" class="close-icon">
             </button>
-            <div class="final-score">${properties.Final_score_all.toFixed(2)}</div>
-            <div class="street-name">${properties.name}</div>
+            <div class="final-score"><strong>${riskLevel}</strong> (${properties.Final_score_all.toFixed(2)})</div>
+            <div class="street-name">${streetName}</div>
             <div id="chart1" class="chart-section"></div>
             <div id="chart2" class="chart-section"></div>
             <div id="chart3" class="chart-section"></div>
         `;
         infoBox.style.display = 'block';
-        renderCharts(properties);
+        renderCharts(properties, flowLevel);
     });
 }
 
-function renderCharts(properties) {
-    renderChart1(properties);
+function renderCharts(properties, flowLevel) {
+    renderChart1(properties, flowLevel);
     renderChart2(properties);
     renderChart3(properties);
 }
 
-function renderChart1(properties) {
+function renderChart1(properties, flowLevel) {
     const chart1 = document.getElementById('chart1');
     chart1.innerHTML = `
-        <div class="chart-title">Potential usage</div>
-        <div class="chart-value">${properties.usage_count_mean}</div>
+        <div class="chart-title">Modelled Pedestrian Flow</div>
+        <div class="chart-value">${flowLevel} (${properties.usage_count_mean})</div>
         <div id="age-group-chart" class="age-group-chart"></div>
     `;
     renderAgeGroupChart();
@@ -74,7 +97,7 @@ function renderAgeGroupChart() {
 
     const colorScale = d3.scaleOrdinal()
         .domain(['<18', '18-65', '>65'])
-        .range(['#ff8000', '#acd8c3', '#ff0000']);
+        .range(['#ff8000', '#dcdcdc', '#ff0000']);
 
     let cumulativeWidth = 0;
     svg.selectAll('rect')
@@ -209,7 +232,7 @@ function renderBarChart(properties) {
         .attr('y', d => y(d.value))
         .attr('width', x.bandwidth())
         .attr('height', d => height - y(d.value))
-        .attr('fill', '#00d1b2')
+        .attr('fill', '#b4e0ea')
         .attr('fill-opacity', d => opacityValues[d.hour.replace(':', '')]);
 }
 
