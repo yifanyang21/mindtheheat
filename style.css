@@ -57,11 +57,13 @@ html, body {
     flex-direction: column;
     align-items: flex-start;
     margin-right: 20px;
+    text-align: left;
 }
 
 .legend-title {
     font-weight: bold;
     margin-bottom: 10px;
+    text-align: left;
 }
 
 .legend-content {
@@ -109,6 +111,17 @@ html, body {
 
 .legend-line.thin {
     height: 3px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.legend-item .legend-line {
+    margin-right: 5px;
 }
 
 path.leaflet-interactive:focus {

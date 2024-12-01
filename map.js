@@ -59,38 +59,7 @@ function getStreetWeight_city(usageCountMean) {
     return 2;
 }
 
-function createLegendItem(lineStyle, text) {
-    const legendItem = document.createElement('div');
-    legendItem.className = 'legend-item';
 
-    const legendLine = document.createElement('div');
-    legendLine.className = 'legend-line';
-    Object.assign(legendLine.style, lineStyle);
-
-    const legendText = document.createElement('span');
-    legendText.textContent = text;
-
-    legendItem.appendChild(legendLine);
-    legendItem.appendChild(legendText);
-    return legendItem;
-}
-
-function createLegendSection(title, items, itemRenderer) {
-    const section = document.createElement('div');
-    section.className = 'legend-section';
-
-    const sectionTitle = document.createElement('div');
-    sectionTitle.className = 'legend-title';
-    sectionTitle.textContent = title;
-
-    section.appendChild(sectionTitle);
-    items.forEach(item => {
-        const legendItem = itemRenderer(item);
-        section.appendChild(legendItem);
-    });
-
-    return section;
-}
 
 function getBlack() {
     return document.body.classList.contains('dark-mode') ? 'white' : 'black';
@@ -99,79 +68,59 @@ function getWhite() {
     return document.body.classList.contains('light-mode') ? 'white' : 'black';
 }
 
+function createLegendSection(titleText, gradientClass, labels, isFlow = false) {
+    const section = document.createElement('div');
+    section.className = 'legend-section';
+
+    const title = document.createElement('div');
+    title.className = 'legend-title';
+    title.textContent = titleText;
+
+    const content = document.createElement('div');
+    content.className = 'legend-content';
+
+    const gradient = document.createElement('div');
+    gradient.className = gradientClass;
+
+    const textContainer = document.createElement('div');
+    textContainer.className = 'legend-text-container';
+
+    labels.forEach(label => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        if (isFlow) {
+            const legendLine = document.createElement('div');
+            legendLine.className = `legend-line ${label.className}`;
+            const legendText = document.createElement('span');
+            legendText.textContent = label.text;
+            legendItem.appendChild(legendLine);
+            legendItem.appendChild(legendText);
+        } else {
+            const legendText = document.createElement('span');
+            legendText.textContent = label;
+            legendItem.appendChild(legendText);
+        }
+        textContainer.appendChild(legendItem);
+    });
+
+    content.appendChild(gradient);
+    content.appendChild(textContainer);
+    section.appendChild(title);
+    section.appendChild(content);
+
+    return section;
+}
+
 function createLegend() {
     const legend = document.createElement('div');
     legend.className = 'legend';
 
-    const heatStressSection = document.createElement('div');
-    heatStressSection.className = 'legend-section';
-
-    const heatStressTitle = document.createElement('div');
-    heatStressTitle.className = 'legend-title';
-    heatStressTitle.textContent = 'Heat Stress Risk';
-
-    const heatStressContent = document.createElement('div');
-    heatStressContent.className = 'legend-content';
-
-    const heatStressGradient = document.createElement('div');
-    heatStressGradient.className = 'legend-gradient';
-
-    const heatStressLabels = ['High risk', 'Medium risk', 'Low risk'];
-    const heatStressTextContainer = document.createElement('div');
-    heatStressTextContainer.className = 'legend-text-container';
-
-    heatStressLabels.forEach(label => {
-        const legendItem = document.createElement('div');
-        legendItem.className = 'legend-item';
-        const legendText = document.createElement('span');
-        legendText.textContent = label;
-        legendItem.appendChild(legendText);
-        heatStressTextContainer.appendChild(legendItem);
-    });
-
-    heatStressContent.appendChild(heatStressGradient);
-    heatStressContent.appendChild(heatStressTextContainer);
-    heatStressSection.appendChild(heatStressTitle);
-    heatStressSection.appendChild(heatStressContent);
-
-    const pedestrianFlowSection = document.createElement('div');
-    pedestrianFlowSection.className = 'legend-section';
-
-    const pedestrianFlowTitle = document.createElement('div');
-    pedestrianFlowTitle.className = 'legend-title';
-    pedestrianFlowTitle.textContent = 'Pedestrian Flow';
-
-    const pedestrianFlowContent = document.createElement('div');
-    pedestrianFlowContent.className = 'legend-content';
-
-    const pedestrianFlowLineContainer = document.createElement('div');
-    pedestrianFlowLineContainer.className = 'legend-line-container';
-
-    const flowLabels = [
+    const heatStressSection = createLegendSection('Heat Stress Risk', 'legend-gradient', ['High risk', 'Medium risk', 'Low risk']);
+    const pedestrianFlowSection = createLegendSection('Pedestrian Flow', 'legend-line-container', [
         { className: 'thick', text: 'High' },
         { className: 'medium', text: 'Medium' },
         { className: 'thin', text: 'Low' }
-    ];
-
-    const pedestrianFlowTextContainer = document.createElement('div');
-    pedestrianFlowTextContainer.className = 'legend-text-container';
-
-    flowLabels.forEach(label => {
-        const legendItem = document.createElement('div');
-        legendItem.className = 'legend-item';
-        const legendLine = document.createElement('div');
-        legendLine.className = `legend-line ${label.className}`;
-        const legendText = document.createElement('span');
-        legendText.textContent = label.text;
-        legendItem.appendChild(legendText);
-        pedestrianFlowTextContainer.appendChild(legendItem);
-        pedestrianFlowLineContainer.appendChild(legendLine);
-    });
-
-    pedestrianFlowContent.appendChild(pedestrianFlowLineContainer);
-    pedestrianFlowContent.appendChild(pedestrianFlowTextContainer);
-    pedestrianFlowSection.appendChild(pedestrianFlowTitle);
-    pedestrianFlowSection.appendChild(pedestrianFlowContent);
+    ], true);
 
     legend.appendChild(heatStressSection);
     legend.appendChild(pedestrianFlowSection);
