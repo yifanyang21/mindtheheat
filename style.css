@@ -76,7 +76,7 @@ html, body {
 .legend-gradient {
     width: 20px;
     height: 100%;
-    background: linear-gradient(to bottom, #ff0000, #ff8000, #ffbf00, #f1eaa2, #b4e0ea);
+    background: linear-gradient(to bottom, #FF6200, #FF8615, #FFAF4D, #FFF0B9, #998EC3);
 }
 
 .legend-text-container {
