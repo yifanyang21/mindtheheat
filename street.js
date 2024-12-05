@@ -102,7 +102,7 @@ function renderAgeGroupChart() {
 
     const colorScale = d3.scaleOrdinal()
         .domain(['<18', '18-65', '>65'])
-        .range(['#ff0000', '#dcdcdc', '#ff0000']);
+        .range(['#d53e4f', '#dcdcdc', '#d53e4f']);
 
     let cumulativeWidth = 0;
     svg.selectAll('rect')
