@@ -33,7 +33,7 @@ function addStreetInteractions(layer) {
     layer.on('click', function (e) {
         const properties = e.target.feature.properties;
         let riskLevel = 'Low risk';
-        if (properties.Final_score_all >= 1.9) {
+        if (properties.Final_score_all >= 1.75) {
             riskLevel = 'High risk';
         } else if (properties.Final_score_all >= 1.5) {
             riskLevel = 'Medium risk';
@@ -97,7 +97,7 @@ function renderAgeGroupChart() {
 
     const colorScale = d3.scaleOrdinal()
         .domain(['<18', '18-65', '>65'])
-        .range(['#ff8000', '#dcdcdc', '#ff0000']);
+        .range(['#ff0000', '#dcdcdc', '#ff0000']);
 
     let cumulativeWidth = 0;
     svg.selectAll('rect')
