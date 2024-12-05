@@ -38,11 +38,11 @@ function filterStreetsByNeighborhood(neighborhood, data) {
 }
 
 function getStreetColor(score) {
-    if (score >= 1.9) return '#ff0000'; // Red
-    if (score >= 1.5) return '#ff8000'; // Orange
-    if (score >= 1.25) return '#ffbf00'; // Yellow
-    if (score >= 1) return '#f1e4a2'; // Light Yellow
-    return '#b4e0ea'; // Blue
+    if (score >= 1.9) return '#FF6200'; // Red
+    if (score >= 1.5) return '#FF8615'; // Orange
+    if (score >= 1.25) return '#FFAF4D'; // Yellow
+    if (score >= 1) return '#FFF0B9'; // Light Yellow
+    return '#998EC3'; // Blue
 }
 
 function getStreetWeight_neighbor(usageCountMean) {

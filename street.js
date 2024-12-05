@@ -74,7 +74,7 @@ function renderChart1(properties, flowLevel) {
     const chart1 = document.getElementById('chart1');
     chart1.innerHTML = `
         <div class="chart-title">Modelled Pedestrian Flow</div>
-        <div class="chart-value">${flowLevel} (${properties.usage_count_mean})</div>
+        <div class="chart-value">${flowLevel}</div>
         <div id="age-group-chart" class="age-group-chart"></div>
     `;
     renderAgeGroupChart();
@@ -134,7 +134,6 @@ function renderChart2(properties) {
     const chart2 = document.getElementById('chart2');
     chart2.innerHTML = `
         <div class="chart-title">Shade Index</div>
-        <div class="chart-value">${properties.sum_adjust.toFixed(2)}</div>
     `;
     renderBarChart(properties);
 }
@@ -240,7 +239,7 @@ function renderChart3(properties) {
     const chart3 = document.getElementById('chart3');
     chart3.innerHTML = `
     <div class="chart-title">PET</div>
-    <div class="chart-value">${properties.PET_mean.toFixed(2)}</div>
+    <div class="chart-value">${properties.PET_mean.toFixed(2)}&#8451;</div>
     `;
     createGaugeChart('chart3', properties.PET_mean);
 }
