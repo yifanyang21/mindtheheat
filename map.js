@@ -38,7 +38,7 @@ function filterStreetsByNeighborhood(neighborhood, data) {
 }
 
 function getStreetColor(score) {
-    if (score >= 1.75) return '#FF6200';
+    if (score >= 1.75) return '#C94D00';
     if (score >= 1.5) return '#FF8615';
     if (score >= 1.25) return '#FFAF4D';
     if (score >= 1) return '#FFF0B9';

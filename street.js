@@ -48,6 +48,11 @@ function addStreetInteractions(layer) {
             flowLevel = 'Medium flow';
         }
 
+        let shadeLevel = 'Sufficient shade';
+        if (properties.sum_adjust >= 12) {
+            shadeLevel = 'Insufficient shade';
+        }
+
         const infoBox = document.getElementById('info-box');
         infoBox.innerHTML = `
             <button class="close-button" onclick="closeInfoBox()">
@@ -134,6 +139,7 @@ function renderChart2(properties) {
     const chart2 = document.getElementById('chart2');
     chart2.innerHTML = `
         <div class="chart-title">Shade Index</div>
+        <div class="chart-value">${shadeLevel}</div>
     `;
     renderBarChart(properties);
 }
