@@ -65,13 +65,13 @@ function addStreetInteractions(layer) {
             <div id="chart3" class="chart-section"></div>
         `;
         infoBox.style.display = 'block';
-        renderCharts(properties, flowLevel);
+        renderCharts(properties, flowLevel, shadeLevel);
     });
 }
 
-function renderCharts(properties, flowLevel) {
+function renderCharts(properties, flowLevel, shadeLevel) {
     renderChart1(properties, flowLevel);
-    renderChart2(properties);
+    renderChart2(properties, shadeLevel);
     renderChart3(properties);
 }
 
@@ -135,7 +135,7 @@ function renderAgeGroupChart() {
         .attr('class', 'chart-tick-label');
 }
 
-function renderChart2(properties) {
+function renderChart2(properties, shadeLevel) {
     const chart2 = document.getElementById('chart2');
     chart2.innerHTML = `
         <div class="chart-title">Shade Index</div>
