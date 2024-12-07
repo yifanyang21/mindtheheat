@@ -447,3 +447,27 @@ body.dark-mode .chart-tick-stroke, body.light-mode .chart-pointer-stroke {
     padding: 10px 20px;
     color: black;
 }
+
+#search-bar {
+    margin-top: 5px;
+    margin-right: 10px;
+    width: 100%;
+    height: 35px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+#search-button {
+    margin-top: 5px;
+    height: 40px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #dcdcdc;
+    color: black;
+    cursor: pointer;
+}
+
+.search button:hover {
+    background-color: #b0dce3;
+}

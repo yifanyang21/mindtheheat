@@ -21,7 +21,24 @@ async function loadGeoJson(url) {
     return response.json();
 }
 
+async function searchAndZoom(query) {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
 
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data.length > 0) {
+            const { lat, lon } = data[0];
+            map.setView([lat, lon], 16);
+        } else {
+            alert('No matching results found.');
+        }
+    } catch (error) {
+        console.error('Error fetching search results:', error);
+        alert('Error fetching search results.');
+    }
+}
 
 function filterStreetsByNeighborhood(neighborhood, data) {
     return turf.featureCollection(
@@ -55,8 +72,6 @@ function getStreetWeight_city(usageCountMean) {
     if (usageCountMean >= 1) return 2;
     return 2;
 }
-
-
 
 function getBlack() {
     return document.body.classList.contains('dark-mode') ? 'white' : 'black';
@@ -260,6 +275,19 @@ async function initMap() {
     resetButton.addEventListener('click', () => {
         select.value = 'all';
         updateMap('all');
+    });
+
+    const searchBar = document.getElementById('search-bar');
+    const searchButton = document.getElementById('search-button');
+
+    searchBar.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            searchAndZoom(searchBar.value);
+        }
+    });
+
+    searchButton.addEventListener('click', function () {
+        searchAndZoom(searchBar.value);
     });
 }
 
