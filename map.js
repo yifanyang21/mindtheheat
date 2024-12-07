@@ -14,17 +14,14 @@ let clusterLayer = null;
 let neighborhoodData = null;
 let streetNetworkData = null;
 let clusterData = null;
+let allStreetsData = null;
 
 async function loadGeoJson(url) {
     const response = await fetch(url, { mode: 'no-cors' });
     return response.json();
 }
 
-function filterStreetsByScore(data, minScore = 1) {
-    return turf.featureCollection(
-        data.features.filter(street => street.properties.Final_score_4_perc >= minScore)
-    );
-}
+
 
 function filterStreetsByNeighborhood(neighborhood, data) {
     return turf.featureCollection(
@@ -135,7 +132,7 @@ function resetNeighborhoodStyles() {
     });
 }
 
-function updateMap(neighborhoodIndex) {
+async function updateMap(neighborhoodIndex) {
     const clusterCheckbox = document.getElementById('cluster-checkbox');
     if (clusterCheckbox.checked && clusterData) {
         if (clusterLayer) {
@@ -154,8 +151,7 @@ function updateMap(neighborhoodIndex) {
     }
 
     if (neighborhoodIndex === 'all') {
-        const filteredStreets = filterStreetsByScore(streetNetworkData, 1);
-        streetLayer = L.geoJSON(filteredStreets, {
+        streetLayer = L.geoJSON(allStreetsData, {
             style: function (feature) {
                 return {
                     color: getStreetColor(feature.properties.Final_score_4_perc),
@@ -168,9 +164,10 @@ function updateMap(neighborhoodIndex) {
     } else {
         const selectedNeighborhood = neighborhoodData.features[neighborhoodIndex];
         const neighborhoodGeometry = selectedNeighborhood.geometry;
+        const buurtCode = selectedNeighborhood.properties.Buurtcode;
+        const buurtData = await loadGeoJson(`data/Buurt_data/${buurtCode}.geojson`);
 
-        const filteredStreets = filterStreetsByNeighborhood(neighborhoodGeometry, streetNetworkData);
-        streetLayer = L.geoJSON(filteredStreets, {
+        streetLayer = L.geoJSON(buurtData, {
             style: function (feature) {
                 return {
                     color: getStreetColor(feature.properties.Final_score_all),
@@ -206,6 +203,7 @@ function switchToLightMode() {
 
 async function initMap() {
     neighborhoodData = await loadGeoJson('data/buurt.geojson');
+    allStreetsData = await loadGeoJson('data/filtered_4_percentage.geojson');
     neighborhoodLayer = L.geoJSON(neighborhoodData, {
         style: { color: 'grey', weight: 0.8, fillOpacity: 0.0, fillColor: getWhite() },
         onEachFeature: function (feature, layer) {
@@ -249,7 +247,6 @@ async function initMap() {
         select.appendChild(option);
     });
 
-    streetNetworkData = await loadGeoJson('data/simplified_final_score_heat2.geojson');
     clusterData = await loadGeoJson('data/gdf_simple_clusters.geojson');
 
     updateMap('all');
