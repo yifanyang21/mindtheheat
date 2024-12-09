@@ -58,7 +58,7 @@ function addStreetInteractions(layer) {
             <button class="close-button" onclick="closeInfoBox()">
                 <img src="img/right.png" alt="Close" class="close-icon">
             </button>
-            <div class="final-score"><strong>${riskLevel}</strong> (${properties.Final_score_all.toFixed(2)})</div>
+            <div class="final-score"><strong>${riskLevel}</strong></div>
             <div class="street-name">${streetName}</div>
             <div id="chart1" class="chart-section"></div>
             <div id="chart2" class="chart-section"></div>
