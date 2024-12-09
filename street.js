@@ -78,7 +78,7 @@ function renderCharts(properties, flowLevel, shadeLevel) {
 function renderChart1(properties, flowLevel) {
     const chart1 = document.getElementById('chart1');
     chart1.innerHTML = `
-        <div class="chart-title">Modelled Pedestrian Flow</div>
+        <div class="chart-title">Modelled Pedestrian Intensity</div>
         <div class="chart-value">${flowLevel}</div>
         <div id="age-group-chart" class="age-group-chart"></div>
     `;
