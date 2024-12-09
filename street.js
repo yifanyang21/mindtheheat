@@ -8,7 +8,7 @@ function addStreetInteractions(layer) {
             riskLevel = 'Medium risk';
         }
 
-        const streetName = properties.name ? properties.name : 'Unnamed';
+        const streetName = properties.name === 0 ? streetName : 'Unnamed';
 
         const tooltipContent = `
             <strong>${streetName}</strong><br>
@@ -39,7 +39,7 @@ function addStreetInteractions(layer) {
             riskLevel = 'Medium risk';
         }
 
-        const streetName = properties.name ? properties.name : 'Unnamed';
+        const streetName = properties.name === 0 ? streetName : 'Unnamed';
 
         let flowLevel = 'Low flow';
         if (properties.usage_count_mean >= 1000) {
