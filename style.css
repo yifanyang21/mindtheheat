@@ -177,7 +177,7 @@ path.leaflet-interactive:focus {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 10px;
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .chart-tick-label {
@@ -319,7 +319,7 @@ body.dark-mode .legend .legend-item .legend-line {
     background-color: grey;
 }
 
-body.light-mode .legend .legend-item .legend-line{
+body.light-mode .legend .legend-item .legend-line {
     background-color: #1e1e1e;
 }
 
@@ -330,18 +330,23 @@ body.light-mode .chart-section {
 body.dark-mode .chart-section {
     background-color: #1e1e1e;
 }
+
 body.dark-mode .chart-tick-label, body.dark-mode .chart-pointer-stroke {
     fill: #ffffff;
 }
+
 body.light-mode .chart-tick-label, body-light-mode .chart-pointer-stroke {
     fill: #1e1e1e;
 }
+
 body.light-mode .chart-tick-stroke, body.dark-mode .chart-pointer-stroke {
     stroke: #ffffff;
 }
+
 body.dark-mode .chart-tick-stroke, body.light-mode .chart-pointer-stroke {
     stroke: #1e1e1e;
 }
+
 .label {
     font-weight: bold;
     font-size: 1rem;

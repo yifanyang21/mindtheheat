@@ -8,7 +8,7 @@ function addStreetInteractions(layer) {
             riskLevel = 'Medium risk';
         }
 
-        const streetName = properties.name === 0 ? 'Unnamed' : properties.name;
+        const streetName = properties.name == 0 ? 'Unnamed' : properties.name;
 
         const tooltipContent = `
             <strong>${streetName}</strong><br>
