@@ -2,13 +2,13 @@ function addStreetInteractions(layer) {
     layer.on('mouseover', function (e) {
         const properties = e.target.feature.properties;
         let riskLevel = 'Low risk';
-        if (properties.Final_score_all >= 1.9) {
+        if (properties.Final_score_all >= 1.75) {
             riskLevel = 'High risk';
         } else if (properties.Final_score_all >= 1.5) {
             riskLevel = 'Medium risk';
         }
 
-        const streetName = properties.name === 0 ? streetName : 'Unnamed';
+        const streetName = properties.name && properties.name !== '0' ? properties.name : 'Unnamed';
 
         const tooltipContent = `
             <strong>${streetName}</strong><br>
@@ -39,7 +39,7 @@ function addStreetInteractions(layer) {
             riskLevel = 'Medium risk';
         }
 
-        const streetName = properties.name === 0 ? streetName : 'Unnamed';
+        const streetName = properties.name && properties.name !== '0' ? properties.name : 'Unnamed';
 
         let flowLevel = 'Low flow';
         if (properties.usage_count_mean >= 1000) {
@@ -254,7 +254,7 @@ function createGaugeChart(chartId, selectedValue) {
     const svg = d3.select(`#${chartId}`).append('svg')
         .attr('width', '100%')
         .attr('height', '100%')
-        .attr('viewBox', '0 0 220 120')
+        .attr('viewBox', '0 0 200 100')
         .attr('preserveAspectRatio', 'xMidYMid meet');
 
     const arc = d3.arc()
@@ -279,7 +279,7 @@ function createGaugeChart(chartId, selectedValue) {
                 .outerRadius(80)
                 .startAngle(segment.startAngle)
                 .endAngle(segment.endAngle))
-            .attr('transform', 'translate(110, 110)')
+            .attr('transform', 'translate(100, 100)') // Adjusted to fit within the viewBox
             .attr('fill', segment.color);
     });
 
@@ -288,10 +288,10 @@ function createGaugeChart(chartId, selectedValue) {
     const radiusInner = 35;
     ticks.forEach(tickValue => {
         const angle = ((tickValue - 25) / 25) * Math.PI - Math.PI / 2;
-        const xOuter = 110 + radiusOuter * Math.cos(angle - Math.PI / 2);
-        const yOuter = 110 + radiusOuter * Math.sin(angle - Math.PI / 2);
-        const xInner = 110 + radiusInner * Math.cos(angle - Math.PI / 2);
-        const yInner = 110 + radiusInner * Math.sin(angle - Math.PI / 2);
+        const xOuter = 100 + radiusOuter * Math.cos(angle - Math.PI / 2);
+        const yOuter = 100 + radiusOuter * Math.sin(angle - Math.PI / 2);
+        const xInner = 100 + radiusInner * Math.cos(angle - Math.PI / 2);
+        const yInner = 100 + radiusInner * Math.sin(angle - Math.PI / 2);
 
         svg.append('line')
             .attr('x1', xOuter)
@@ -300,8 +300,8 @@ function createGaugeChart(chartId, selectedValue) {
             .attr('y2', yInner)
             .attr('class', 'chart-tick-stroke');
 
-        const xLabel = 110 + (radiusInner + 55) * Math.cos(angle - Math.PI / 2);
-        const yLabel = 110 + (radiusInner + 55) * Math.sin(angle - Math.PI / 2);
+        const xLabel = 100 + (radiusInner + 55) * Math.cos(angle - Math.PI / 2);
+        const yLabel = 100 + (radiusInner + 55) * Math.sin(angle - Math.PI / 2);
         svg.append('text')
             .attr('x', xLabel)
             .attr('y', yLabel)
@@ -315,20 +315,20 @@ function createGaugeChart(chartId, selectedValue) {
     const pointerAngle = Math.max(-Math.PI / 2, Math.min(((selectedValue - 25) / 25) * Math.PI - Math.PI / 2, Math.PI / 2));
     const pointerLength = 70;
     svg.append('line')
-        .attr('x1', 110)
-        .attr('y1', 110)
-        .attr('x2', 110 + pointerLength * Math.cos(pointerAngle - Math.PI / 2))
-        .attr('y2', 110 + pointerLength * Math.sin(pointerAngle - Math.PI / 2))
+        .attr('x1', 100)
+        .attr('y1', 100)
+        .attr('x2', 100 + pointerLength * Math.cos(pointerAngle - Math.PI / 2))
+        .attr('y2', 100 + pointerLength * Math.sin(pointerAngle - Math.PI / 2))
         .attr('class', 'chart-pointer-stroke');
 
     svg.append('circle')
-        .attr('cx', 110)
-        .attr('cy', 110)
+        .attr('cx', 100)
+        .attr('cy', 100)
         .attr('r', 5)
         .attr('class', 'chart-pointer-stroke');
 
     svg.append('text')
-        .attr('x', 110)
+        .attr('x', 100)
         .attr('y', 140)
         .attr('text-anchor', 'middle')
         .attr('font-size', '12px')

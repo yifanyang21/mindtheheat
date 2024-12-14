@@ -10,53 +10,156 @@ html, body {
     width: 100%;
 }
 
-.controls, .title.box {
-    width: 300px;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 1000;
+.controls, .info-box, .modal.box {
     background: white;
-    padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    padding: 10px;
 }
 
-.modal.box {
-    border: 0;
-    border-radius: 5px;
+.controls {
+    position: absolute;
+    width: 270px;
+    z-index: 1000;
+    height: calc(100% - 20px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0px;
+}
+
+.controls .section {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 5px;
+}
+
+.controls .section:last-child {
+    border-bottom: none;
+}
+
+.control {
+    align-items: center;
+    display: flex;
+    margin-bottom: 2px;
+}
+
+.info-box {
+    bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    justify-content: space-between;
+    overflow-y: auto;
     padding: 10px;
-    background-color: white;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 330px;
+    z-index: 2000;
+}
+
+.info-box .close-button {
+    align-self: flex-end;
+    background: #dcdcdc;
+    border: none;
+    border-radius: 5px;
+    color: black;
+    cursor: pointer;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 5px 5px;
+    position: absolute;
+    right: 10px;
+    top: 15px;
+    z-index: 2000;
+}
+
+.info-box .close-icon {
+    height: 20px;
+    width: 20px;
+}
+
+.info-box .street-name {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+.info-box .final-score {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.chart-section {
+    align-items: center;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.chart-section .chart-title {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chart-section .chart-value {
+    font-size: 1rem;
+    margin-bottom: 5px;
+}
+
+#chart2 {
+    height: 33vh;
+}
+
+#chart3 {
+    height: 24vh;
+}
+
+.bar {
+    fill: #96d4df;
+}
+
+.chart-pointer-stroke {
+    stroke-width: 2;
+}
+
+.chart-tick-label {
+    font-size: 0.7rem;
 }
 
 .leaflet-tooltip, .neighborhood-tooltip {
     background-color: white;
     border: 1px solid #ffffff;
     border-radius: 3px;
-    padding: 5px;
     font-size: 12px;
+    padding: 5px;
     pointer-events: none;
 }
 
 .legend {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    z-index: 1000;
-    padding: 10px;
+    align-items: flex-start;
     border-radius: 5px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0);
-    font-size: 12px;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    font-size: 0.7rem;
+    padding: 10px;
     width: auto;
+    margin-top: auto;
 }
 
 .legend-section {
+    align-items: flex-start;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     text-align: left;
 }
 
@@ -64,26 +167,27 @@ html, body {
     font-weight: bold;
     margin-bottom: 10px;
     text-align: left;
+    font-size: 0.8rem;
 }
 
 .legend-content {
+    align-items: flex-start;
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
-    height: 100px;
+    height: 10vh;
 }
 
 .legend-gradient {
-    width: 20px;
-    height: 100%;
     background: linear-gradient(to bottom, #E25701, #FF8615, #FFAF4D, #FFF0B9, #998EC3);
+    height: 100%;
+    width: 20px;
 }
 
 .legend-text-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     height: 100%;
+    justify-content: space-between;
     margin-left: 10px;
     width: 100px;
 }
@@ -91,14 +195,14 @@ html, body {
 .legend-line-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     height: 100%;
+    justify-content: space-between;
     margin-left: 10px;
 }
 
 .legend-line {
-    width: 20px;
     background-color: black;
+    width: 20px;
 }
 
 .legend-line.thick {
@@ -114,8 +218,8 @@ html, body {
 }
 
 .legend-item {
-    display: flex;
     align-items: center;
+    display: flex;
     justify-content: flex-start;
     text-align: left;
 }
@@ -128,164 +232,157 @@ path.leaflet-interactive:focus {
     outline: none;
 }
 
-.info-box {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    bottom: 10px;
-    z-index: 2000;
-    background: white;
-    padding: 15px;
-    border-radius: 0;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    width: 350px;
-    height: auto;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.info-box .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 2000;
-    background: #dcdcdc;
-    color: black;
-    border: none;
-    border-radius: 5px;
-    padding: 5px 5px;
-    cursor: pointer;
-    align-self: flex-end;
-    font-size: 1.5rem;
-    line-height: 1;
-}
-
-
-.info-box .close-icon {
-    width: 20px;
-    height: 20px;
-}
-
-.info-box .street-name {
-    font-size: 1.2rem;
-    margin-bottom: 5px;
-}
-
-.info-box .final-score {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    margin-top: 30px;
-}
-
-.chart-tick-label {
-    font-size: 0.8rem;
-}
-
-.chart-tick-stroke, .chart-pointer-stroke {
-    stroke-width: 3;
-}
-
-#chart1 {
-    height: 15vh;
-}
-
-#chart2 {
-    height: 30vh;
-}
-
-#chart3 {
-    height: 23vh;
-}
-
-.chart-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #ffffff;
-}
-
-.chart-section .chart-title {
-    font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.chart-section .chart-value {
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.bar {
-    fill: #96d4df;
-}
-
-.modal.is-active {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1000;
-}
-
-.modal-content {
-    position: relative;
-    z-index: 1001;
-    max-width: 500px;
-    width: 100%;
-    background: white;
-    border-radius: 5px;
-    padding: 20px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-    border: none;
-}
-
-.modal-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(10, 10, 10, 0.5);
-}
 
 .title {
-    font-size: 2.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.box {
-    border: 0;
-    border-radius: 5px;
-    padding: 10px;
-    background-color: white;
+    margin-bottom: 5px;
+    margin-top: 10px;
 }
 
 .button {
-    padding: 5px 10px;
+    background-color: #dcdcdc;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
-    background-color: #dcdcdc;
     color: white;
-    margin-top: 0;
+    cursor: pointer;
+    padding: 5px 10px;
 }
 
 .button:hover {
     background-color: #b0dce3;
 }
+
+.info-button, .mode-button {
+    background-color: #dcdcdc;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: black;
+    cursor: pointer;
+    height: 35px;
+    padding: 5px 10px;
+}
+
+#dark-mode-button {
+    margin-right: 10px;
+}
+
+.info-button:hover, .mode-button:hover {
+    background-color: #b0dce3;
+}
+
+.button-group {
+    display: flex;
+    margin-left: auto;
+}
+
+.button-icon {
+    height: 18px;
+    width: 18px;
+}
+
+.reset-button {
+    color: black;
+    font-size: 0.9rem;
+    font-weight: bold;
+    height: 35px;
+    width: 100%;
+    margin-top: 2px;
+}
+
+.got-it-button {
+    color: black;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+}
+
+#search-bar {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 30px;
+    margin-right: 10px;
+    width: 100%;
+}
+
+#search-button {
+    background-color: #dcdcdc;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: black;
+    cursor: pointer;
+    height: 35px;
+    padding: 5px 10px;
+}
+
+.search button:hover {
+    background-color: #b0dce3;
+}
+
+#slider-container, #shade-slider-container, #pet-slider-container {
+    left: 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    position: relative;
+    top: 0;
+    z-index: 1000;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+    /* Reduce spacing between slider filters */
+}
+
+#slider-container input, #shade-slider-container input, #pet-slider-container input {
+    width: 100%;
+}
+
+.label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
+.field {
+    margin-bottom: 2px;
+    margin-top: 5px;
+}
+
+.is-grouped {
+    align-items: center;
+    display: flex;
+}
+
+.is-expanded {
+    flex-grow: 1;
+}
+
+.select {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    height: 35px;
+    margin-top: 5px;
+    padding: 5px;
+    width: 100%;
+}
+
+.select select {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px;
+    width: 100%;
+}
+
+.checkbox {
+    align-items: center;
+    display: flex;
+    font-size: 0.8rem;
+}
+
+.checkbox input {
+    margin-right: 5px;
+}
+
 
 body.dark-mode {
     background-color: #121212;
@@ -302,7 +399,7 @@ body.dark-mode .box, body.dark-mode .controls, body.dark-mode .info-box, body.da
     color: #ffffff;
 }
 
-body.light-mode .box, body.light-mode .controls, body-light-mode .info-box, body-light-mode .modal-content {
+body.light-mode .box, body-light-mode .controls, body-light-mode .info-box, body-light-mode .modal-content {
     background-color: #ffffff;
     color: #000000;
 }
@@ -347,132 +444,36 @@ body.dark-mode .chart-tick-stroke, body.light-mode .chart-pointer-stroke {
     stroke: #1e1e1e;
 }
 
-.label {
-    font-weight: bold;
-    font-size: 1rem;
-    margin-bottom: 5px;
-    margin-top: 15px;
-    margin-right: 10px;
-}
-
-.field {
-    margin-bottom: 10px;
-    margin-top: 10px;
-}
-
-.is-grouped {
+.modal.is-active {
     display: flex;
     align-items: center;
-}
-
-.control {
-    margin-right: 10px;
-    display: flex;
-    align-items: center;
-}
-
-.is-expanded {
-    flex-grow: 1;
-}
-
-.select {
-    margin-top: 5px;
+    justify-content: center;
+    height: 100%;
     width: 100%;
-    height: 40px;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
-.select select {
+.modal-content {
+    background: white;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    padding: 20px;
+    position: relative;
     width: 100%;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    z-index: 1001;
 }
 
-.button.is-primary {
-    background-color: #00d1b2;
-    color: white;
-}
-
-.button.is-primary:hover {
-    background-color: #00b89c;
-}
-
-.checkbox-container {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.checkbox-container input {
-    margin-right: 5px;
-}
-
-.show-cool-space {
-    display: flex;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.show-cool-space input {
-    margin-right: 5px;
-}
-
-.info-button, .mode-button {
-    height: 40px;
-}
-
-.mode-button {
-    margin-right: 5px;
-}
-
-.button-icon {
-    width: 20px;
-    height: 20px;
-}
-
-.button-group {
-    margin-left: auto;
-    display: flex;
-}
-
-.reset-button {
-    font-size: 1.1rem;
-    font-weight: bold;
-    height: 40px;
+.modal-background {
+    background-color: rgba(10, 10, 10, 0.5);
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
     width: 100%;
-    color: black;
-}
-
-.got-it-button {
-    font-size: 1.1rem;
-    font-weight: bold;
-    padding: 10px 20px;
-    color: black;
-}
-
-#search-bar {
-    margin-top: 5px;
-    margin-right: 10px;
-    width: 100%;
-    height: 35px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
-#search-button {
-    margin-top: 5px;
-    height: 40px;
-    padding: 5px 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #dcdcdc;
-    color: black;
-    cursor: pointer;
-}
-
-.search button:hover {
-    background-color: #b0dce3;
+    z-index: 1000;
 }

@@ -30,27 +30,6 @@
             </div>
         </div>
         <div class="field">
-            <label for="city-select" class="label">City:</label>
-            <div class="control">
-                <select id="city-select" class="select">
-                    <option value="amsterdam">Amsterdam</option>
-                </select>
-            </div>
-        </div>
-        <div class="field">
-            <label for="neighborhood-select" class="label">Neighborhood:</label>
-            <div class="control">
-                <select id="neighborhood-select" class="select">
-                    <option value="all">---</option>
-                </select>
-            </div>
-        </div>
-        <div class="field">
-            <div class="control">
-                <button id="reset-button" class="button reset-button">Reset to City View</button>
-            </div>
-        </div>
-        <div class="field">
             <div class="control is-grouped">
                 <input type="text" id="search-bar" class="input" placeholder="Search for a street or neighborhood">
                 <button id="search-button" class="search button">
@@ -58,20 +37,104 @@
                 </button>
             </div>
         </div>
-        <div class="field">
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" id="cluster-checkbox">
-                    Show Clusters
-                </label>
+        <div class="section">
+            <div class="field">
+                <label for="city-select" class="label">City:</label>
+                <div class="control">
+                    <select id="city-select" class="select">
+                        <option value="amsterdam">Amsterdam</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <label for="neighborhood-select" class="label">Neighborhood:</label>
+                <div class="control">
+                    <select id="neighborhood-select" class="select">
+                        <option value="all">---</option>
+                    </select>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button id="reset-button" class="button reset-button">Reset to City View</button>
+                </div>
             </div>
         </div>
-        <div class="field">
-            <div class="control">
-                <label class="checkbox">
-                    <input type="checkbox" id="cool-space-checkbox">
-                    Show Cool Space
-                </label>
+        <div class="section">
+            <div class="field">
+                <label class="label">Filter</label>
+            </div>
+            <div class="field" id="shade-slider-container">
+                <div class="control">
+                    <label for="shade-slider">Shade score is higher than: <strong><span
+                                id="shade-slider-value">0</span></strong></label>
+                </div>
+                <div class="control">
+                    <input type="range" id="shade-slider" min="0" max="1" step="0.1" value="0" />
+                </div>
+            </div>
+            <div class="field" id="pet-slider-container">
+                <div class="control">
+                    <label for="pet-slider">Mean PET is higher than: <strong><span
+                                id="pet-slider-value">27</span>&#8451;</strong></label>
+                </div>
+                <div class="control">
+                    <input type="range" id="pet-slider" min="27" max="45" step="1" value="27" />
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <div class="field">
+                <label class="label">Additional Layers</label>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox" id="cluster-checkbox">
+                        Show Clusters
+                    </label>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox">
+                        <input type="checkbox" id="cool-space-checkbox">
+                        Show Cool Space
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- Ensure legend section is at the bottom within the control class -->
+        <div class="legend control" style="margin-top: auto;">
+            <div class="legend-section">
+                <div class="legend-title">Heat Stress Risk</div>
+                <div class="legend-content">
+                    <div class="legend-gradient"></div>
+                    <div class="legend-text-container">
+                        <div class="legend-item">High risk</div>
+                        <div class="legend-item">Medium risk</div>
+                        <div class="legend-item">Low risk</div>
+                    </div>
+                </div>
+            </div>
+            <div class="legend-section">
+                <div class="legend-title">Pedestrian Intensity</div>
+                <div class="legend-content">
+                    <div class="legend-line-container">
+                        <div class="legend-item">
+                            <div class="legend-line thick"></div>
+                            <span>High</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line medium"></div>
+                            <span>Medium</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-line thin"></div>
+                            <span>Low</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -86,7 +149,7 @@
         </div>
         <div class="chart-container">
             <div id="chart1" class="chart-section">
-                <div class="chart-title">Modelled Pedestrian Flow</div>
+                <div class="chart-title">Modelled Pedestrian Intensity</div>
             </div>
             <div id="chart2" class="chart-section">
                 <div class="chart-title">Shade Index</div>
@@ -108,9 +171,14 @@
                     <li>Click on streets to see more data and charts.</li>
                     <li>Use the reset button to return to the city view.</li>
                 </ul>
-                <p>We use 40% shade coverage and 35 Celcius PET Degrees as thresholds. Streets with shade coverage greater than 40% and PET Degrees less than 35 Celcius are considered low risk. The final score is the sum of the standardized scores of these two factors, and the street color reflects this score. </p>
-                <p>Pedestrian flow is also considered, represented by the street width.</p> 
-                <p>In the city view, we only show the top 4% high-risk streets, which we consider high priority. In neighborhood mode, you can view information for all streets. For more information, please click <a href="link">here</a>.</p>
+                <p>We use 40% shade coverage and 35 Celcius PET Degrees as thresholds. Streets with shade coverage
+                    greater than 40% and PET Degrees less than 35 Celcius are considered low risk. The final score is
+                    the sum of the standardized scores of these two factors, and the street color reflects this score.
+                </p>
+                <p>Pedestrian flow is also considered, represented by the street width.</p>
+                <p>In the city view, we only show the top 4% high-risk streets, which we consider high priority. In
+                    neighborhood mode, you can view information for all streets. For more information, please click <a
+                        href="link">here</a>.</p>
                 <button id="close-modal" class="button got-it-button">Got it!</button>
             </div>
         </div>
@@ -122,10 +190,12 @@
         document.body.classList.add('light-mode');
         document.getElementById('close-modal').addEventListener('click', function () {
             document.getElementById('usage-modal').classList.remove('is-active');
+            document.getElementById('usage-modal').style.display = 'none'; // Ensure modal is hidden
         });
 
         document.getElementById('info-button').addEventListener('click', function () {
             document.getElementById('usage-modal').classList.add('is-active');
+            document.getElementById('usage-modal').style.display = 'flex'; // Ensure modal is displayed
         });
 
         document.getElementById('dark-mode-button').addEventListener('click', function () {
@@ -149,6 +219,5 @@
             // Add functionality for "Show Cool Space" checkbox here
         });
     </script>
-    <footer>
-        <p></p>
+
 </html>

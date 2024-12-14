@@ -1,9 +1,14 @@
 const map = L.map('map', {
-    zoomControl: false
+    zoomControl: false,
+    attributionControl: true // Enable attribution control
 }).setView([0, 0], 13);
 
-let lightTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png');
-let darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png');
+let lightTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+});
+let darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+});
 
 lightTileLayer.addTo(map);
 
@@ -17,7 +22,7 @@ let clusterData = null;
 let allStreetsData = null;
 
 async function loadGeoJson(url) {
-    const response = await fetch(url, { mode: 'no-cors' });
+    const response = await fetch(url);
     return response.json();
 }
 
@@ -124,20 +129,7 @@ function createLegendSection(titleText, gradientClass, labels, isFlow = false) {
 }
 
 function createLegend() {
-    const legend = document.createElement('div');
-    legend.className = 'legend';
-
-    const heatStressSection = createLegendSection('Heat Stress Risk', 'legend-gradient', ['High risk', 'Medium risk', 'Low risk']);
-    const pedestrianFlowSection = createLegendSection('Pedestrian Flow', 'legend-line-container', [
-        { className: 'thick', text: 'High' },
-        { className: 'medium', text: 'Medium' },
-        { className: 'thin', text: 'Low' }
-    ], true);
-
-    legend.appendChild(heatStressSection);
-    legend.appendChild(pedestrianFlowSection);
-
-    document.body.appendChild(legend);
+    // Remove the original legend creation code
 }
 
 function resetNeighborhoodStyles() {
@@ -145,6 +137,63 @@ function resetNeighborhoodStyles() {
         neighborhoodLayer.resetStyle(layer);
         layer.unbindTooltip();
     });
+}
+
+let currentShadeThreshold = 0.0;
+let currentPetThreshold = 28.0;
+let buurtData = null;
+
+document.getElementById('shade-slider').addEventListener('input', function () {
+    currentShadeThreshold = parseFloat(this.value);
+    document.getElementById('shade-slider-value').textContent = currentShadeThreshold;
+    applyFilter();
+});
+
+document.getElementById('pet-slider').addEventListener('input', function () {
+    currentPetThreshold = parseFloat(this.value);
+    document.getElementById('pet-slider-value').textContent = currentPetThreshold;
+    applyFilter();
+});
+
+function applyFilter() {
+    if (streetLayer) {
+        map.removeLayer(streetLayer);
+    }
+
+    const neighborhoodIndex = document.getElementById('neighborhood-select').value;
+    const dataToFilter = neighborhoodIndex === 'all' ? allStreetsData : buurtData;
+
+    if (!dataToFilter) return;
+
+    const filteredData = {
+        ...dataToFilter,
+        features: dataToFilter.features.filter(feature => {
+            return feature.properties.shade_score >= currentShadeThreshold &&
+                feature.properties.PET_mean >= currentPetThreshold;
+        })
+    };
+
+    if (neighborhoodIndex === 'all') {
+        streetLayer = L.geoJSON(filteredData, {
+            style: function (feature) {
+                return {
+                    color: getStreetColor(feature.properties.Final_score_all),
+                    weight: getStreetWeight_city(feature.properties.usage_count_mean)
+                };
+            }
+        }).addTo(map);
+    } else {
+        streetLayer = L.geoJSON(filteredData, {
+            style: function (feature) {
+                return {
+                    color: getStreetColor(feature.properties.Final_score_all),
+                    weight: getStreetWeight_neighbor(feature.properties.usage_count_mean)
+                };
+            }
+        }).addTo(map);
+    }
+
+    applyStreetInteractions();
 }
 
 async function updateMap(neighborhoodIndex) {
@@ -166,30 +215,14 @@ async function updateMap(neighborhoodIndex) {
     }
 
     if (neighborhoodIndex === 'all') {
-        streetLayer = L.geoJSON(allStreetsData, {
-            style: function (feature) {
-                return {
-                    color: getStreetColor(feature.properties.Final_score_4_perc),
-                    weight: getStreetWeight_city(feature.properties.usage_count_mean)
-                };
-            }
-        }).addTo(map);
-
+        buurtData = null;
+        applyFilter();
         map.fitBounds(streetLayer.getBounds());
     } else {
         const selectedNeighborhood = neighborhoodData.features[neighborhoodIndex];
-        const neighborhoodGeometry = selectedNeighborhood.geometry;
         const buurtCode = selectedNeighborhood.properties.Buurtcode;
-        const buurtData = await loadGeoJson(`data/Buurt_data/${buurtCode}.geojson`);
-
-        streetLayer = L.geoJSON(buurtData, {
-            style: function (feature) {
-                return {
-                    color: getStreetColor(feature.properties.Final_score_all),
-                    weight: getStreetWeight_neighbor(feature.properties.usage_count_mean)
-                };
-            }
-        }).addTo(map);
+        buurtData = await loadGeoJson(`data/Buurt_data/${buurtCode}.geojson`);
+        applyFilter();
 
         const bounds = L.geoJSON(selectedNeighborhood).getBounds();
         map.fitBounds(bounds);
@@ -203,6 +236,7 @@ async function updateMap(neighborhoodIndex) {
             }
         });
     }
+
     applyStreetInteractions();
 }
 
@@ -292,4 +326,3 @@ async function initMap() {
 }
 
 initMap();
-createLegend();
