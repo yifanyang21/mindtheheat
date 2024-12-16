@@ -42,9 +42,9 @@ function addStreetInteractions(layer) {
         const streetName = properties.name && properties.name !== '0' ? properties.name : 'Unnamed';
 
         let flowLevel = 'Low flow';
-        if (properties.usage_count_mean >= 1000) {
+        if (properties.usage_count_mean >= 2069) {
             flowLevel = 'High flow';
-        } else if (properties.usage_count_mean >= 250) {
+        } else if (properties.usage_count_mean >= 442) {
             flowLevel = 'Medium flow';
         }
 

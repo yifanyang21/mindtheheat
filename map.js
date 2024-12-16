@@ -67,7 +67,7 @@ function getStreetColor(score) {
 function getStreetWeight_neighbor(usageCountMean) {
     if (usageCountMean >= 2069) return 10;
     if (usageCountMean >= 442) return 7;
-    if (usageCountMean >= 1) return 5;
+    if (usageCountMean >= 1) return 4;
     return 2;
 }
 
