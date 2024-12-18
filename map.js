@@ -57,25 +57,25 @@ function filterStreetsByNeighborhood(neighborhood, data) {
 }
 
 function getStreetColor(score) {
-    if (score >= 1.75) return '#E25701';
-    if (score >= 1.5) return '#FF8615';
-    if (score >= 1.25) return '#FFAF4D';
-    if (score >= 1) return '#FFF0B9';
-    return '#998EC3';
+    if (score >= 0.75) return '#FF6200';
+    if (score >= 0.5) return '#FF9500';
+    if (score >= 0.25) return '#FFAA00';
+    if (score > 0) return '#FFC300';
+    return '#F1DDA0';
 }
 
-function getStreetWeight_neighbor(usageCountMean) {
-    if (usageCountMean >= 2069) return 10;
-    if (usageCountMean >= 442) return 7;
-    if (usageCountMean >= 1) return 4;
+function getStreetWeight_neighbor(jenkins_bin) {
+    if (jenkins_bin === "bin_4") return 8;
+    if (jenkins_bin === "bin_3") return 8;
+    if (jenkins_bin === "bin_2") return 4;
     return 2;
 }
 
-function getStreetWeight_city(usageCountMean) {
-    if (usageCountMean >= 2069) return 5;
-    if (usageCountMean >= 442) return 3;
-    if (usageCountMean >= 1) return 2;
-    return 2;
+function getStreetWeight_city(jenkins_bin) {
+    if (jenkins_bin === "bin_4") return 3;
+    if (jenkins_bin === "bin_3") return 2;
+    if (jenkins_bin === "bin_2") return 1;
+    return 1;
 }
 
 function getBlack() {
@@ -128,9 +128,6 @@ function createLegendSection(titleText, gradientClass, labels, isFlow = false) {
     return section;
 }
 
-function createLegend() {
-    // Remove the original legend creation code
-}
 
 function resetNeighborhoodStyles() {
     neighborhoodLayer.eachLayer(function (layer) {
@@ -139,13 +136,13 @@ function resetNeighborhoodStyles() {
     });
 }
 
-let currentShadeThreshold = 0.0;
-let currentPetThreshold = 28.0;
+let currentShadeThreshold = 0;
+let currentPetThreshold = 27.0;
 let buurtData = null;
 
 document.getElementById('shade-slider').addEventListener('input', function () {
     currentShadeThreshold = parseFloat(this.value);
-    document.getElementById('shade-slider-value').textContent = currentShadeThreshold;
+    document.getElementById('shade-slider-value').textContent = 100 - currentShadeThreshold;
     applyFilter();
 });
 
@@ -168,8 +165,8 @@ function applyFilter() {
     const filteredData = {
         ...dataToFilter,
         features: dataToFilter.features.filter(feature => {
-            return feature.properties.shade_score >= currentShadeThreshold &&
-                feature.properties.PET_mean >= currentPetThreshold;
+            return feature.properties.avg_exposure_percent * 100 >= currentShadeThreshold &&
+                feature.properties.PET >= currentPetThreshold;
         })
     };
 
@@ -178,7 +175,7 @@ function applyFilter() {
             style: function (feature) {
                 return {
                     color: getStreetColor(feature.properties.Final_score_all),
-                    weight: getStreetWeight_city(feature.properties.usage_count_mean)
+                    weight: getStreetWeight_city(feature.properties.jenkins_bin)
                 };
             }
         }).addTo(map);
@@ -187,7 +184,7 @@ function applyFilter() {
             style: function (feature) {
                 return {
                     color: getStreetColor(feature.properties.Final_score_all),
-                    weight: getStreetWeight_neighbor(feature.properties.usage_count_mean)
+                    weight: getStreetWeight_neighbor(feature.properties.jenkins_bin)
                 };
             }
         }).addTo(map);

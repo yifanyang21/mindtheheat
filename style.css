@@ -105,22 +105,28 @@ html, body {
 }
 
 .chart-section .chart-title {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.chart-section .chart-sub-title {
+    font-size: 0.8rem;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .chart-section .chart-value {
-    font-size: 1rem;
+    font-size: 0.8rem;
     margin-bottom: 5px;
 }
 
 #chart2 {
-    height: 33vh;
+    height: 30vh;
 }
 
 #chart3 {
-    height: 24vh;
+    height: 20vh;
 }
 
 .bar {
@@ -132,7 +138,11 @@ html, body {
 }
 
 .chart-tick-label {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
+}
+
+.chart-gauge-tick-label {
+    font-size: 0.6rem;
 }
 
 .leaflet-tooltip, .neighborhood-tooltip {
@@ -178,7 +188,7 @@ html, body {
 }
 
 .legend-gradient {
-    background: linear-gradient(to bottom, #E25701, #FF8615, #FFAF4D, #FFF0B9, #998EC3);
+    background: linear-gradient(to bottom, #FF6200, #FF9500, #FFAA00, #FFC300, #F1DDA0);
     height: 100%;
     width: 20px;
 }

@@ -2,9 +2,9 @@ function addStreetInteractions(layer) {
     layer.on('mouseover', function (e) {
         const properties = e.target.feature.properties;
         let riskLevel = 'Low risk';
-        if (properties.Final_score_all >= 1.75) {
+        if (properties.Final_score_all >= 0.75) {
             riskLevel = 'High risk';
-        } else if (properties.Final_score_all >= 1.5) {
+        } else if (properties.Final_score_all >= 0.5) {
             riskLevel = 'Medium risk';
         }
 
@@ -33,19 +33,19 @@ function addStreetInteractions(layer) {
     layer.on('click', function (e) {
         const properties = e.target.feature.properties;
         let riskLevel = 'Low risk';
-        if (properties.Final_score_all >= 1.75) {
+        if (properties.Final_score_all >= 0.75) {
             riskLevel = 'High risk';
-        } else if (properties.Final_score_all >= 1.5) {
+        } else if (properties.Final_score_all >= 0.5) {
             riskLevel = 'Medium risk';
         }
 
         const streetName = properties.name && properties.name !== '0' ? properties.name : 'Unnamed';
 
-        let flowLevel = 'Low flow';
-        if (properties.usage_count_mean >= 2069) {
-            flowLevel = 'High flow';
-        } else if (properties.usage_count_mean >= 442) {
-            flowLevel = 'Medium flow';
+        let flowLevel = 'Low intensity';
+        if (properties.jenkins_bin === 'bin_4' || properties.jenkins_bin === 'bin_3') {
+            flowLevel = 'High intensity';
+        } else if (properties.jenkins_bin === 'bin_2') {
+            flowLevel = 'Medium intensity';
         }
 
         let shadeLevel = 'Sufficient shade';
@@ -77,61 +77,86 @@ function renderCharts(properties, flowLevel, shadeLevel) {
 
 function renderChart1(properties, flowLevel) {
     const chart1 = document.getElementById('chart1');
+    const buurtData = properties.buurtcode;
+    const totalPop = properties.pop;
+    let buurtInfo;
+
+    if (totalPop === 0 || buurtData === '0' || Object.keys(buurtData).length === 0) {
+        buurtInfo = 'unknown';
+    } else {
+        buurtInfo = Object.entries(buurtData).map(([code, count]) => {
+            const percentage = ((count / totalPop) * 100).toFixed(2);
+            const buurt = neighborhoodData.features.find(feature => feature.properties.CBS_Buurtcode === code).properties.Buurt;
+            const buurtCode = code.replace('BU0363', '');
+            return `${percentage}% from ${buurt} (${buurtCode})`;
+        }).join('<br>');
+    }
+
     chart1.innerHTML = `
         <div class="chart-title">Modelled Pedestrian Intensity</div>
         <div class="chart-value">${flowLevel}</div>
         <div id="age-group-chart" class="age-group-chart"></div>
+        <div class="chart-sub-title">Relevant neighborhood</div>
+        <div class="chart-tick-label">${buurtInfo}</div>
     `;
-    renderAgeGroupChart();
+    renderAgeGroupChart(properties);
 }
 
-function renderAgeGroupChart() {
+function renderAgeGroupChart(properties) {
     const data = [
-        { ageGroup: '<18', percentage: 15 },
-        { ageGroup: '18-65', percentage: 60 },
-        { ageGroup: '>65', percentage: 25 }
+        { ageGroup: '<15', percentage: properties.young_pop_pct },
+        { ageGroup: '>65', percentage: properties.old_pop_pct },
     ];
 
     const svg = d3.select('#age-group-chart').append('svg')
         .attr('width', '100%')
-        .attr('height', 50);
+        .attr('height', 70);
+
+    svg.append('text')
+        .attr('x', '50%')
+        .attr('y', 15)
+        .attr('text-anchor', 'middle')
+        .attr('class', 'chart-sub-title')
+        .text('Potential age group');
 
     const widthScale = d3.scaleLinear()
         .domain([0, 100])
         .range([0, 300]);
 
-    const colorScale = d3.scaleOrdinal()
-        .domain(['<18', '18-65', '>65'])
-        .range(['#d53e4f', '#dcdcdc', '#d53e4f']);
+    svg.append('rect')
+        .attr('x', 0)
+        .attr('y', 20)
+        .attr('width', widthScale(100))
+        .attr('height', 15)
+        .attr('fill', '#F1F1F1');
 
-    let cumulativeWidth = 0;
-    svg.selectAll('rect')
-        .data(data)
-        .enter()
-        .append('rect')
-        .attr('x', d => {
-            const x = cumulativeWidth;
-            cumulativeWidth += widthScale(d.percentage);
-            return x;
-        })
-        .attr('y', 0)
-        .attr('width', d => widthScale(d.percentage))
-        .attr('height', 20)
-        .attr('fill', d => colorScale(d.ageGroup));
+    svg.append('rect')
+        .attr('x', 0)
+        .attr('y', 20)
+        .attr('width', widthScale(data[0].percentage))
+        .attr('height', 15)
+        .attr('fill', '#E63946');
 
-    cumulativeWidth = 0;
-    svg.selectAll('text')
+    svg.append('rect')
+        .attr('x', widthScale(100) - widthScale(data[1].percentage))
+        .attr('y', 20)
+        .attr('width', widthScale(data[1].percentage))
+        .attr('height', 15)
+        .attr('fill', '#E63946');
+
+    svg.selectAll('text.chart-tick-label')
         .data(data)
         .enter()
         .append('text')
-        .attr('x', d => {
-            const x = cumulativeWidth + 5 + widthScale(d.percentage) / 2;
-            cumulativeWidth += widthScale(d.percentage);
-            return x;
+        .attr('x', (d, i) => i === 0 ? 5 : widthScale(100) - 10)
+        .attr('y', 50)
+        .attr('text-anchor', (d, i) => i === 0 ? 'start' : 'end')
+        .text(d => {
+            if (d.percentage === 0) {
+                return `${d.ageGroup}: unknown`;
+            }
+            return `${d.ageGroup}: ${d.percentage.toFixed(2)}%`;
         })
-        .attr('y', 35)
-        .attr('text-anchor', 'middle')
-        .text(d => `${d.ageGroup}: ${d.percentage}%`)
         .attr('class', 'chart-tick-label');
 }
 
@@ -221,13 +246,14 @@ function renderBarChart(properties) {
     g.append('g')
         .attr('class', 'axis axis--x')
         .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(x).tickValues(data.map(d => d.hour)).tickFormat((d, i) => i % 2 === 0 ? d : ''))
+        .call(d3.axisBottom(x).tickValues(data.map(d => d.hour)).tickFormat((d, i) => i % 2 === 0 ? d.replace(':00', 'h') : ''))
         .selectAll('text')
         .style('font-size', '8.5px');
 
     g.append('g')
         .attr('class', 'axis axis--y')
-        .call(d3.axisLeft(y).ticks(10, '%'));
+        .call(d3.axisLeft(y).ticks(10, '%'))
+        .style('font-size', '8.5px');
 
     g.selectAll('.bar')
         .data(data)
@@ -245,21 +271,21 @@ function renderChart3(properties) {
     const chart3 = document.getElementById('chart3');
     chart3.innerHTML = `
     <div class="chart-title">PET</div>
-    <div class="chart-value">${properties.PET_mean.toFixed(2)}&#8451;</div>
+    <div class="chart-value">${properties.PET.toFixed(2)}&#8451;</div>
     `;
-    createGaugeChart('chart3', properties.PET_mean);
+    createGaugeChart('chart3', properties.PET);
 }
 
 function createGaugeChart(chartId, selectedValue) {
     const svg = d3.select(`#${chartId}`).append('svg')
-        .attr('width', '100%')
-        .attr('height', '100%')
-        .attr('viewBox', '0 0 200 100')
+        .attr('width', '80%')
+        .attr('height', '80%')
+        .attr('viewBox', '0 0 150 75')
         .attr('preserveAspectRatio', 'xMidYMid meet');
 
     const arc = d3.arc()
-        .innerRadius(40)
-        .outerRadius(80)
+        .innerRadius(30)
+        .outerRadius(60)
         .startAngle(-Math.PI / 2)
         .endAngle(Math.PI / 2);
 
@@ -275,23 +301,23 @@ function createGaugeChart(chartId, selectedValue) {
         svg.append('path')
             .datum(segment)
             .attr('d', d3.arc()
-                .innerRadius(40)
-                .outerRadius(80)
+                .innerRadius(30)
+                .outerRadius(60)
                 .startAngle(segment.startAngle)
                 .endAngle(segment.endAngle))
-            .attr('transform', 'translate(100, 100)') // Adjusted to fit within the viewBox
+            .attr('transform', 'translate(75, 75)')
             .attr('fill', segment.color);
     });
 
     const ticks = [29, 35, 41, 46];
-    const radiusOuter = 82;
-    const radiusInner = 35;
+    const radiusOuter = 62;
+    const radiusInner = 25;
     ticks.forEach(tickValue => {
         const angle = ((tickValue - 25) / 25) * Math.PI - Math.PI / 2;
-        const xOuter = 100 + radiusOuter * Math.cos(angle - Math.PI / 2);
-        const yOuter = 100 + radiusOuter * Math.sin(angle - Math.PI / 2);
-        const xInner = 100 + radiusInner * Math.cos(angle - Math.PI / 2);
-        const yInner = 100 + radiusInner * Math.sin(angle - Math.PI / 2);
+        const xOuter = 75 + radiusOuter * Math.cos(angle - Math.PI / 2);
+        const yOuter = 75 + radiusOuter * Math.sin(angle - Math.PI / 2);
+        const xInner = 75 + radiusInner * Math.cos(angle - Math.PI / 2);
+        const yInner = 75 + radiusInner * Math.sin(angle - Math.PI / 2);
 
         svg.append('line')
             .attr('x1', xOuter)
@@ -300,39 +326,32 @@ function createGaugeChart(chartId, selectedValue) {
             .attr('y2', yInner)
             .attr('class', 'chart-tick-stroke');
 
-        const xLabel = 100 + (radiusInner + 55) * Math.cos(angle - Math.PI / 2);
-        const yLabel = 100 + (radiusInner + 55) * Math.sin(angle - Math.PI / 2);
+        const xLabel = 75 + (radiusInner + 40) * Math.cos(angle - Math.PI / 2);
+        const yLabel = 75 + (radiusInner + 40) * Math.sin(angle - Math.PI / 2);
         svg.append('text')
             .attr('x', xLabel)
             .attr('y', yLabel)
-            .attr('class', 'chart-tick-label')
+            .attr('class', 'chart-gauge-tick-label')
             .attr('text-anchor', 'middle')
-            .attr('font-size', '10px')
             .attr('dominant-baseline', 'middle')
+            .attr('font-size', '6px')
             .text(tickValue);
     });
 
     const pointerAngle = Math.max(-Math.PI / 2, Math.min(((selectedValue - 25) / 25) * Math.PI - Math.PI / 2, Math.PI / 2));
-    const pointerLength = 70;
+    const pointerLength = 50; // Adjusted pointer length
     svg.append('line')
-        .attr('x1', 100)
-        .attr('y1', 100)
-        .attr('x2', 100 + pointerLength * Math.cos(pointerAngle - Math.PI / 2))
-        .attr('y2', 100 + pointerLength * Math.sin(pointerAngle - Math.PI / 2))
+        .attr('x1', 75)
+        .attr('y1', 75)
+        .attr('x2', 75 + pointerLength * Math.cos(pointerAngle - Math.PI / 2))
+        .attr('y2', 75 + pointerLength * Math.sin(pointerAngle - Math.PI / 2))
         .attr('class', 'chart-pointer-stroke');
 
     svg.append('circle')
-        .attr('cx', 100)
-        .attr('cy', 100)
-        .attr('r', 5)
+        .attr('cx', 75)
+        .attr('cy', 75)
+        .attr('r', 4)
         .attr('class', 'chart-pointer-stroke');
-
-    svg.append('text')
-        .attr('x', 100)
-        .attr('y', 140)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '12px')
-        .text(selectedValue.toFixed(2));
 }
 
 function applyStreetInteractions() {
