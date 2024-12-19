@@ -361,7 +361,7 @@ function createGaugeChart(chartId, selectedValue) {
     });
 
     const pointerAngle = Math.max(-Math.PI / 2, Math.min(((selectedValue - 25) / 25) * Math.PI - Math.PI / 2, Math.PI / 2));
-    const pointerLength = 50; // Adjusted pointer length
+    const pointerLength = 50;
     svg.append('line')
         .attr('x1', 75)
         .attr('y1', 75)

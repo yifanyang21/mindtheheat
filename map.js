@@ -69,8 +69,8 @@ function getStreetColor(score) {
 }
 
 function getStreetWeight_neighbor(jenkins_bin) {
-    if (jenkins_bin === "bin_4") return 8;
-    if (jenkins_bin === "bin_3") return 8;
+    if (jenkins_bin === "bin_4") return 7;
+    if (jenkins_bin === "bin_3") return 5;
     if (jenkins_bin === "bin_2") return 4;
     return 2;
 }
