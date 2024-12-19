@@ -61,6 +61,7 @@ function filterStreetsByNeighborhood(neighborhood, data) {
 }
 
 function getStreetColor(score) {
+    if (score === null) return '#ddd';
     if (score >= 0.75) return '#FF6200';
     if (score >= 0.5) return '#FFA200';
     if (score > 0) return '#FFC300';
@@ -140,7 +141,7 @@ function resetNeighborhoodStyles() {
 }
 
 let currentShadeThreshold = 0;
-let currentPetThreshold = 27.0;
+let currentPetThreshold = 0.0;
 let buurtData = null;
 
 document.getElementById('shade-slider').addEventListener('input', function () {

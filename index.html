@@ -79,7 +79,7 @@
                                 id="pet-slider-value">27</span>&#8451;</strong></label>
                 </div>
                 <div class="control">
-                    <input type="range" id="pet-slider" min="27" max="45" step="1" value="27" />
+                    <input type="range" id="pet-slider" min="27" max="45" step="1" value="0" />
                 </div>
             </div>
         </div>
@@ -186,12 +186,12 @@
         document.body.classList.add('light-mode');
         document.getElementById('close-modal').addEventListener('click', function () {
             document.getElementById('usage-modal').classList.remove('is-active');
-            document.getElementById('usage-modal').style.display = 'none'; // Ensure modal is hidden
+            document.getElementById('usage-modal').style.display = 'none';
         });
 
         document.getElementById('info-button').addEventListener('click', function () {
             document.getElementById('usage-modal').classList.add('is-active');
-            document.getElementById('usage-modal').style.display = 'flex'; // Ensure modal is displayed
+            document.getElementById('usage-modal').style.display = 'flex';
         });
 
         document.getElementById('dark-mode-button').addEventListener('click', function () {

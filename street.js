@@ -2,7 +2,9 @@ function addStreetInteractions(layer) {
     layer.on('mouseover', function (e) {
         const properties = e.target.feature.properties;
         let riskLevel = 'Low risk';
-        if (properties.Final_score_all >= 0.75) {
+        if (properties.PET === 0) {
+            riskLevel = 'no data';
+        } else if (properties.Final_score_all >= 0.75) {
             riskLevel = 'High risk';
         } else if (properties.Final_score_all >= 0.5) {
             riskLevel = 'Medium risk';
@@ -33,7 +35,9 @@ function addStreetInteractions(layer) {
     layer.on('click', function (e) {
         const properties = e.target.feature.properties;
         let riskLevel = 'Low risk';
-        if (properties.Final_score_all >= 0.75) {
+        if (properties.PET === 0) {
+            riskLevel = 'no data';
+        } else if (properties.Final_score_all >= 0.75) {
             riskLevel = 'High risk';
         } else if (properties.Final_score_all >= 0.5) {
             riskLevel = 'Medium risk';
@@ -82,21 +86,25 @@ function renderChart1(properties, flowLevel) {
     let buurtInfo;
 
     if (totalPop === 0 || buurtData === '0' || Object.keys(buurtData).length === 0) {
-        buurtInfo = 'unknown';
+        buurtInfo = 'no data';
     } else {
-        buurtInfo = Object.entries(buurtData).map(([code, count]) => {
-            const percentage = ((count / totalPop) * 100).toFixed(2);
-            const buurt = neighborhoodData.features.find(feature => feature.properties.CBS_Buurtcode === code).properties.Buurt;
-            const buurtCode = code.replace('BU0363', '');
-            return `${percentage}% from ${buurt} (${buurtCode})`;
-        }).join('<br>');
+        buurtInfo = Object.entries(buurtData)
+            .map(([code, count]) => {
+                const percentage = ((count / totalPop) * 100).toFixed(2);
+                const buurt = neighborhoodData.features.find(feature => feature.properties.CBS_Buurtcode === code).properties.Buurt;
+                const buurtCode = code.replace('BU0363', '');
+                return { percentage, buurtInfo: `${percentage}% from ${buurt} (${buurtCode})` };
+            })
+            .sort((a, b) => b.percentage - a.percentage)
+            .map(entry => entry.buurtInfo)
+            .join('<br>');
     }
 
     chart1.innerHTML = `
         <div class="chart-title">Modelled Pedestrian Intensity</div>
         <div class="chart-value">${flowLevel}</div>
         <div id="age-group-chart" class="age-group-chart"></div>
-        <div class="chart-sub-title">Relevant neighborhood</div>
+        <div class="chart-sub-title">Neighbourhood of origin</div>
         <div class="chart-tick-label">${buurtInfo}</div>
     `;
     renderAgeGroupChart(properties);
@@ -117,7 +125,7 @@ function renderAgeGroupChart(properties) {
         .attr('y', 15)
         .attr('text-anchor', 'middle')
         .attr('class', 'chart-sub-title')
-        .text('Potential age group');
+        .text('Estimated age distribution');
 
     const widthScale = d3.scaleLinear()
         .domain([0, 100])
@@ -153,7 +161,7 @@ function renderAgeGroupChart(properties) {
         .attr('text-anchor', (d, i) => i === 0 ? 'start' : 'end')
         .text(d => {
             if (d.percentage === 0) {
-                return `${d.ageGroup}: unknown`;
+                return `${d.ageGroup}: no data`;
             }
             return `${d.ageGroup}: ${d.percentage.toFixed(2)}%`;
         })
@@ -162,8 +170,15 @@ function renderAgeGroupChart(properties) {
 
 function renderChart2(properties, shadeLevel) {
     const chart2 = document.getElementById('chart2');
+    if (properties.PET === 0) {
+        chart2.innerHTML = `
+            <div class="chart-title">Shade Coverage</div>
+            <div class="chart-value">no data</div>
+        `;
+        return;
+    }
     chart2.innerHTML = `
-        <div class="chart-title">Shade Index</div>
+        <div class="chart-title">Shade Coverage</div>
         <div class="chart-value">${shadeLevel}</div>
     `;
     renderBarChart(properties);
@@ -269,9 +284,16 @@ function renderBarChart(properties) {
 
 function renderChart3(properties) {
     const chart3 = document.getElementById('chart3');
+    if (properties.PET === 0) {
+        chart3.innerHTML = `
+            <div class="chart-title">PET</div>
+            <div class="chart-value">no data</div>
+        `;
+        return;
+    }
     chart3.innerHTML = `
-    <div class="chart-title">PET</div>
-    <div class="chart-value">${properties.PET.toFixed(2)}&#8451;</div>
+        <div class="chart-title">PET</div>
+        <div class="chart-value">${properties.PET.toFixed(2)}&#8451;</div>
     `;
     createGaugeChart('chart3', properties.PET);
 }

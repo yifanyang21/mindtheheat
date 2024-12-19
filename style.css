@@ -343,7 +343,6 @@ path.leaflet-interactive:focus {
     z-index: 1000;
     font-size: 0.8rem;
     margin-bottom: 5px;
-    /* Reduce spacing between slider filters */
 }
 
 #slider-container input, #shade-slider-container input, #pet-slider-container input {
@@ -447,7 +446,7 @@ body.dark-mode .chart-tick-label, body.dark-mode .chart-pointer-stroke {
     fill: #ffffff;
 }
 
-body.light-mode .chart-tick-label, body-light-mode .chart-pointer-stroke {
+body.light-mode .chart-tick-label, body.light-mode .chart-pointer-stroke {
     fill: #1e1e1e;
 }
 
