@@ -1,6 +1,6 @@
 const map = L.map('map', {
     zoomControl: false,
-    attributionControl: true // Enable attribution control
+    attributionControl: true
 }).setView([0, 0], 13);
 
 let lightTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -11,6 +11,10 @@ let darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/
 });
 
 lightTileLayer.addTo(map);
+
+L.control.zoom({
+    position: 'topleft'
+}).addTo(map);
 
 let neighborhoodLayer = null;
 let streetLayer = null;
@@ -58,8 +62,7 @@ function filterStreetsByNeighborhood(neighborhood, data) {
 
 function getStreetColor(score) {
     if (score >= 0.75) return '#FF6200';
-    if (score >= 0.5) return '#FF9500';
-    if (score >= 0.25) return '#FFAA00';
+    if (score >= 0.5) return '#FFA200';
     if (score > 0) return '#FFC300';
     return '#F1DDA0';
 }

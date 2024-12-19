@@ -95,11 +95,11 @@ html, body {
 .chart-section {
     align-items: center;
     background-color: #ffffff;
-    border: 1px solid #ddd;
+    border-top: 1px solid #ddd;
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: top;
     margin-top: 10px;
     padding: 10px;
 }
@@ -119,6 +119,11 @@ html, body {
 .chart-section .chart-value {
     font-size: 0.8rem;
     margin-bottom: 5px;
+}
+
+#chart1 {
+    height: 22vh;
+    overflow-y: auto;
 }
 
 #chart2 {
@@ -188,7 +193,7 @@ html, body {
 }
 
 .legend-gradient {
-    background: linear-gradient(to bottom, #FF6200, #FF9500, #FFAA00, #FFC300, #F1DDA0);
+    background: linear-gradient(to bottom, #FF6200, #FFA200, #F1DDA0);
     height: 100%;
     width: 20px;
 }
@@ -486,4 +491,10 @@ body.dark-mode .chart-tick-stroke, body.light-mode .chart-pointer-stroke {
     top: 0;
     width: 100%;
     z-index: 1000;
+}
+
+.leaflet-control-zoom {
+    top: 50px !important;
+    left: 290px !important;
+    border: #c4c4c4 !important;
 }
