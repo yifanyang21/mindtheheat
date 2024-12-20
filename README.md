@@ -1,4 +1,4 @@
-![Mind the heat logo](/assets/images/logo.avif)
+![Mind the heat logo](/img/logo.avif)
 # Mind the Heat
 > [!IMPORTANT]
 > This is part two of this project, the first part is the [code to generate the data](https://github.com/JulianWDev/mindtheheat/).
