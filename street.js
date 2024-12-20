@@ -103,6 +103,7 @@ function renderChart1(properties, flowLevel) {
     chart1.innerHTML = `
         <div class="chart-title">Modelled Pedestrian Intensity</div>
         <div class="chart-value">${flowLevel}</div>
+        <div class="chart-sub-title">Estimated age distribution</div>
         <div id="age-group-chart" class="age-group-chart"></div>
         <div class="chart-sub-title">Neighbourhood of origin</div>
         <div class="chart-tick-label">${buurtInfo}</div>
@@ -118,14 +119,7 @@ function renderAgeGroupChart(properties) {
 
     const svg = d3.select('#age-group-chart').append('svg')
         .attr('width', '100%')
-        .attr('height', 70);
-
-    svg.append('text')
-        .attr('x', '50%')
-        .attr('y', 15)
-        .attr('text-anchor', 'middle')
-        .attr('class', 'chart-sub-title')
-        .text('Estimated age distribution');
+        .attr('height', 50);
 
     const widthScale = d3.scaleLinear()
         .domain([0, 100])
@@ -133,21 +127,21 @@ function renderAgeGroupChart(properties) {
 
     svg.append('rect')
         .attr('x', 0)
-        .attr('y', 20)
+        .attr('y', 0)
         .attr('width', widthScale(100))
         .attr('height', 15)
         .attr('fill', '#F1F1F1');
 
     svg.append('rect')
         .attr('x', 0)
-        .attr('y', 20)
+        .attr('y', 0)
         .attr('width', widthScale(data[0].percentage))
         .attr('height', 15)
         .attr('fill', '#E63946');
 
     svg.append('rect')
         .attr('x', widthScale(100) - widthScale(data[1].percentage))
-        .attr('y', 20)
+        .attr('y', 0)
         .attr('width', widthScale(data[1].percentage))
         .attr('height', 15)
         .attr('fill', '#E63946');
@@ -157,7 +151,7 @@ function renderAgeGroupChart(properties) {
         .enter()
         .append('text')
         .attr('x', (d, i) => i === 0 ? 5 : widthScale(100) - 10)
-        .attr('y', 50)
+        .attr('y', 30)
         .attr('text-anchor', (d, i) => i === 0 ? 'start' : 'end')
         .text(d => {
             if (d.percentage === 0) {
@@ -241,7 +235,7 @@ function renderBarChart(properties) {
         .attr('width', '100%')
         .attr('height', '100%');
 
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+    const margin = { top: 20, right: 20, bottom: 20, left: 40 };
     const width = svg.node().getBoundingClientRect().width - margin.left - margin.right;
     const height = svg.node().getBoundingClientRect().height - margin.top - margin.bottom;
 

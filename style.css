@@ -66,7 +66,7 @@ html, body {
     border-radius: 5px;
     color: black;
     cursor: pointer;
-    font-size: 1.5rem;
+    font-size: 24px;
     line-height: 1;
     padding: 5px 5px;
     position: absolute;
@@ -81,12 +81,12 @@ html, body {
 }
 
 .info-box .street-name {
-    font-size: 1rem;
+    font-size: 16px;
     margin-bottom: 5px;
 }
 
 .info-box .final-score {
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: bold;
     margin-bottom: 5px;
     margin-top: 10px;
@@ -105,19 +105,19 @@ html, body {
 }
 
 .chart-section .chart-title {
-    font-size: 0.9rem;
+    font-size: 14.4px;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .chart-section .chart-sub-title {
-    font-size: 0.8rem;
+    font-size: 12.8px;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .chart-section .chart-value {
-    font-size: 0.8rem;
+    font-size: 12.8px;
     margin-bottom: 5px;
 }
 
@@ -143,11 +143,11 @@ html, body {
 }
 
 .chart-tick-label {
-    font-size: 0.8rem;
+    font-size: 12.8px;
 }
 
 .chart-gauge-tick-label {
-    font-size: 0.6rem;
+    font-size: 9.6px;
 }
 
 .leaflet-tooltip, .neighborhood-tooltip {
@@ -165,7 +165,7 @@ html, body {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0);
     display: flex;
     flex-direction: row;
-    font-size: 0.7rem;
+    font-size: 11.2px;
     padding: 10px;
     width: auto;
     margin-top: auto;
@@ -182,7 +182,7 @@ html, body {
     font-weight: bold;
     margin-bottom: 10px;
     text-align: left;
-    font-size: 0.8rem;
+    font-size: 12.8px;
 }
 
 .legend-content {
@@ -249,7 +249,7 @@ path.leaflet-interactive:focus {
 
 
 .title {
-    font-size: 1.5rem;
+    font-size: 24px;
     font-weight: bold;
     margin-bottom: 5px;
     margin-top: 10px;
@@ -298,7 +298,7 @@ path.leaflet-interactive:focus {
 
 .reset-button {
     color: black;
-    font-size: 0.9rem;
+    font-size: 14.4px;
     font-weight: bold;
     height: 35px;
     width: 100%;
@@ -307,7 +307,7 @@ path.leaflet-interactive:focus {
 
 .got-it-button {
     color: black;
-    font-size: 1rem;
+    font-size: 16px;
     font-weight: bold;
     padding: 10px 20px;
 }
@@ -350,7 +350,7 @@ path.leaflet-interactive:focus {
 }
 
 .label {
-    font-size: 0.9rem;
+    font-size: 14.4px;
     font-weight: bold;
     margin-bottom: 5px;
     margin-right: 10px;
@@ -390,7 +390,7 @@ path.leaflet-interactive:focus {
 .checkbox {
     align-items: center;
     display: flex;
-    font-size: 0.8rem;
+    font-size: 12.8px;
 }
 
 .checkbox input {
@@ -446,7 +446,7 @@ body.dark-mode .chart-tick-label, body.dark-mode .chart-pointer-stroke {
     fill: #ffffff;
 }
 
-body.light-mode .chart-tick-label, body.light-mode .chart-pointer-stroke {
+body.light-mode .chart-tick-label, body-light-mode .chart-pointer-stroke {
     fill: #1e1e1e;
 }
 
