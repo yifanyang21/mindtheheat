@@ -21,9 +21,9 @@ The code for the dashboard to show the data is included in this repository.
 
 ### Colophon
 Project members: 
-- [Carlotta Marie Henning](https://github.com/CarMaHen)?
+- [Carlotta Marie Henning](https://github.com/CarMaHen)
 - [Julian Fitzpatrick](https://github.com/JulianWDev)
-- [Layne Perry](https://github.com/layneperry)https://github.com/JulianWDev/mindtheheat/
+- [Layne Perry](https://github.com/layneperry)
 - [Max Olzheim](https://github.com/MaxOlzheim)
 - [Romane Sanchez](https://github.com/RomaneSanchez)
 - [Yifan Yang](https://github.com/yifanyang21)
