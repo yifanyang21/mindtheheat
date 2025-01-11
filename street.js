@@ -1,76 +1,81 @@
 function addStreetInteractions(layer) {
-    layer.on('mouseover', function (e) {
-        const properties = e.target.feature.properties;
-        let riskLevel = 'Low risk';
-        if (properties.PET === 0) {
-            riskLevel = 'no data';
-        } else if (properties.Final_score_all >= 0.75) {
-            riskLevel = 'High risk';
-        } else if (properties.Final_score_all >= 0.5) {
-            riskLevel = 'Medium risk';
-        }
+    layer.on('mouseover', handleMouseOver);
+    layer.on('mouseout', handleMouseOut);
+    layer.on('click', handleClick);
+}
 
-        const streetName = properties.name && properties.name !== '0' ? properties.name : 'Unnamed';
+function handleMouseOver(e) {
+    const properties = e.target.feature.properties;
+    const riskLevel = getRiskLevel(properties);
+    const streetName = getStreetName(properties);
+    const tooltipContent = `
+        <strong>${streetName}</strong><br>
+        <strong>${riskLevel}</strong> (${properties.Final_score_all})
+    `;
+    const tooltip = L.tooltip({
+        permanent: false,
+        direction: 'top',
+        className: 'street-tooltip'
+    })
+        .setContent(tooltipContent)
+        .setLatLng(e.latlng);
+    e.target.bindTooltip(tooltip).openTooltip();
+    e.target.setStyle({ weight: 5, color: '#dcdcdc' });
+}
 
-        const tooltipContent = `
-            <strong>${streetName}</strong><br>
-            <strong>${riskLevel}</strong> (${properties.Final_score_all})
-        `;
-        const tooltip = L.tooltip({
-            permanent: false,
-            direction: 'top',
-            className: 'street-tooltip'
-        })
-            .setContent(tooltipContent)
-            .setLatLng(e.latlng);
-        layer.bindTooltip(tooltip).openTooltip();
-        layer.setStyle({ weight: 5, color: '#dcdcdc' });
-    });
+function handleMouseOut(e) {
+    e.target.unbindTooltip();
+    streetLayer.resetStyle(e.target);
+}
 
-    layer.on('mouseout', function (e) {
-        layer.unbindTooltip();
-        streetLayer.resetStyle(e.target);
-    });
+function handleClick(e) {
+    const properties = e.target.feature.properties;
+    const riskLevel = getRiskLevel(properties);
+    const streetName = getStreetName(properties);
+    const flowLevel = getFlowLevel(properties);
+    const shadeLevel = getShadeLevel(properties);
 
-    layer.on('click', function (e) {
-        const properties = e.target.feature.properties;
-        let riskLevel = 'Low risk';
-        if (properties.PET === 0) {
-            riskLevel = 'no data';
-        } else if (properties.Final_score_all >= 0.75) {
-            riskLevel = 'High risk';
-        } else if (properties.Final_score_all >= 0.5) {
-            riskLevel = 'Medium risk';
-        }
+    const infoBox = document.getElementById('info-box');
+    infoBox.innerHTML = `
+        <button class="close-button" onclick="closeInfoBox()">
+            <img src="img/right.png" alt="Close" class="close-icon">
+        </button>
+        <div class="final-score"><strong>${riskLevel}</strong></div>
+        <div class="street-name">${streetName}</div>
+        <div id="chart1" class="chart-section"></div>
+        <div id="chart2" class="chart-section"></div>
+        <div id="chart3" class="chart-section"></div>
+    `;
+    infoBox.style.display = 'block';
+    renderCharts(properties, flowLevel, shadeLevel);
+}
 
-        const streetName = properties.name && properties.name !== '0' ? properties.name : 'Unnamed';
+function getRiskLevel(properties) {
+    if (properties.PET === 0) {
+        return 'no data';
+    } else if (properties.Final_score_all >= 0.75) {
+        return 'High risk';
+    } else if (properties.Final_score_all >= 0.5) {
+        return 'Medium risk';
+    }
+    return 'Low risk';
+}
 
-        let flowLevel = 'Low intensity';
-        if (properties.jenkins_bin === 'bin_4' || properties.jenkins_bin === 'bin_3') {
-            flowLevel = 'High intensity';
-        } else if (properties.jenkins_bin === 'bin_2') {
-            flowLevel = 'Medium intensity';
-        }
+function getStreetName(properties) {
+    return properties.name && properties.name !== '0' ? properties.name : 'Unnamed';
+}
 
-        let shadeLevel = 'Sufficient shade';
-        if (properties.sum_adjust >= 12) {
-            shadeLevel = 'Insufficient shade';
-        }
+function getFlowLevel(properties) {
+    if (properties.jenkins_bin === 'bin_4' || properties.jenkins_bin === 'bin_3') {
+        return 'High intensity';
+    } else if (properties.jenkins_bin === 'bin_2') {
+        return 'Medium intensity';
+    }
+    return 'Low intensity';
+}
 
-        const infoBox = document.getElementById('info-box');
-        infoBox.innerHTML = `
-            <button class="close-button" onclick="closeInfoBox()">
-                <img src="img/right.png" alt="Close" class="close-icon">
-            </button>
-            <div class="final-score"><strong>${riskLevel}</strong></div>
-            <div class="street-name">${streetName}</div>
-            <div id="chart1" class="chart-section"></div>
-            <div id="chart2" class="chart-section"></div>
-            <div id="chart3" class="chart-section"></div>
-        `;
-        infoBox.style.display = 'block';
-        renderCharts(properties, flowLevel, shadeLevel);
-    });
+function getShadeLevel(properties) {
+    return properties.sum_adjust >= 12 ? 'Insufficient shade' : 'Sufficient shade';
 }
 
 function renderCharts(properties, flowLevel, shadeLevel) {

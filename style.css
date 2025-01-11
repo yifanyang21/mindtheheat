@@ -1,5 +1,19 @@
+:root {
+    --font-family: 'Roboto', Arial, Helvetica, sans-serif;
+    --shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    --bg-light: #ffffff;
+    --bg-dark: #1e1e1e;
+    --ct-dark: #ffffff;
+    --ct-light: #1e1e1e;
+    --color-button: #dcdcdc;
+    --color-hover: #b0dce3;
+    --border-color: #ddd;
+    --bar-color: #96d4df;
+}
+
+/* Base styles */
 html, body {
-    font-family: 'Roboto', Arial, Helvetica, sans-serif;
+    font-family: var(--font-family);
     height: 100%;
     margin: 0;
     overflow: hidden;
@@ -10,13 +24,15 @@ html, body {
     width: 100%;
 }
 
-.controls, .info-box, .modal.box {
-    background: white;
+/* Common box styles */
+.controls, .info-box, .modal.box, .modal-content {
+    background: var(--bg-light);
     border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow);
     padding: 10px;
 }
 
+/* Controls box */
 .controls {
     position: absolute;
     width: 270px;
@@ -30,7 +46,7 @@ html, body {
 
 .controls .section {
     margin-bottom: 10px;
-    border-bottom: 1px solid #dcdcdc;
+    border-bottom: 1px solid var(--color-button);
     padding-bottom: 5px;
 }
 
@@ -44,31 +60,31 @@ html, body {
     margin-bottom: 2px;
 }
 
+/* Info box styles */
 .info-box {
     bottom: 10px;
-    display: flex;
-    flex-direction: column;
-    height: auto;
-    justify-content: space-between;
-    overflow-y: auto;
-    padding: 10px;
-    position: absolute;
     right: 10px;
     top: 10px;
     width: 330px;
     z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow-y: auto;
+    position: absolute;
+    height: auto;
 }
 
 .info-box .close-button {
     align-self: flex-end;
-    background: #dcdcdc;
+    background: var(--color-button);
     border: none;
     border-radius: 5px;
     color: black;
     cursor: pointer;
     font-size: 24px;
     line-height: 1;
-    padding: 5px 5px;
+    padding: 5px;
     position: absolute;
     right: 10px;
     top: 15px;
@@ -88,14 +104,14 @@ html, body {
 .info-box .final-score {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 5px;
-    margin-top: 10px;
+    margin: 10px 0 5px;
 }
 
+/* Chart styles */
 .chart-section {
     align-items: center;
-    background-color: #ffffff;
-    border-top: 1px solid #ddd;
+    background-color: var(--bg-light);
+    border-top: 1px solid var(--border-color);
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -110,15 +126,14 @@ html, body {
     margin-bottom: 5px;
 }
 
-.chart-section .chart-sub-title {
-    font-size: 12.8px;
-    font-weight: bold;
+.chart-section .chart-sub-title,
+.chart-section .chart-value {
+    font-size: 13px;
     margin-bottom: 5px;
 }
 
-.chart-section .chart-value {
-    font-size: 12.8px;
-    margin-bottom: 5px;
+.chart-section .chart-sub-title {
+    font-weight: bold;
 }
 
 #chart1 {
@@ -126,46 +141,41 @@ html, body {
     overflow-y: auto;
 }
 
-#chart2 {
-    height: 30vh;
+#chart2 { height: 30vh; }
+#chart3 { height: 20vh; }
+
+.bar { fill: var(--bar-color); }
+
+.chart-pointer-stroke { 
+    stroke-width: 2; 
 }
 
-#chart3 {
-    height: 20vh;
+.chart-tick-label { 
+    font-size: 13px; 
 }
 
-.bar {
-    fill: #96d4df;
+.chart-gauge-tick-label { 
+    font-size: 9px; 
 }
 
-.chart-pointer-stroke {
-    stroke-width: 2;
-}
-
-.chart-tick-label {
-    font-size: 12.8px;
-}
-
-.chart-gauge-tick-label {
-    font-size: 9.6px;
-}
-
-.leaflet-tooltip, .neighborhood-tooltip {
-    background-color: white;
-    border: 1px solid #ffffff;
+/* Tooltip styles */
+.leaflet-tooltip,
+.neighborhood-tooltip {
+    background-color: var(--bg-light);
+    border: 1px solid var(--bg-light);
     border-radius: 3px;
     font-size: 12px;
     padding: 5px;
     pointer-events: none;
 }
 
+/* Legend styles */
 .legend {
     align-items: flex-start;
     border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0);
     display: flex;
     flex-direction: row;
-    font-size: 11.2px;
+    font-size: 12px;
     padding: 10px;
     width: auto;
     margin-top: auto;
@@ -182,7 +192,7 @@ html, body {
     font-weight: bold;
     margin-bottom: 10px;
     text-align: left;
-    font-size: 12.8px;
+    font-size: 13px;
 }
 
 .legend-content {
@@ -198,15 +208,7 @@ html, body {
     width: 20px;
 }
 
-.legend-text-container {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-between;
-    margin-left: 10px;
-    width: 100px;
-}
-
+.legend-text-container,
 .legend-line-container {
     display: flex;
     flex-direction: column;
@@ -215,22 +217,18 @@ html, body {
     margin-left: 10px;
 }
 
+.legend-text-container {
+    width: 100px;
+}
+
 .legend-line {
     background-color: black;
     width: 20px;
 }
 
-.legend-line.thick {
-    height: 10px;
-}
-
-.legend-line.medium {
-    height: 7px;
-}
-
-.legend-line.thin {
-    height: 3px;
-}
+.legend-line.thick { height: 10px; }
+.legend-line.medium { height: 7px; }
+.legend-line.thin { height: 3px; }
 
 .legend-item {
     align-items: center;
@@ -243,47 +241,50 @@ html, body {
     margin-right: 5px;
 }
 
+/* Interactive elements */
 path.leaflet-interactive:focus {
     outline: none;
 }
 
-
 .title {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 5px;
-    margin-top: 10px;
+    margin: 10px 0 5px;
+}
+
+/* Button styles */
+.button,
+.info-button,
+.mode-button,
+#search-button {
+    background-color: var(--color-button);
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
 }
 
 .button {
-    background-color: #dcdcdc;
     border: none;
-    border-radius: 5px;
     color: white;
-    cursor: pointer;
-    padding: 5px 10px;
 }
 
-.button:hover {
-    background-color: #b0dce3;
-}
-
-.info-button, .mode-button {
-    background-color: #dcdcdc;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+.info-button,
+.mode-button,
+#search-button {
+    border: 1px solid var(--border-color);
     color: black;
-    cursor: pointer;
     height: 35px;
-    padding: 5px 10px;
+}
+
+.button:hover,
+.info-button:hover,
+.mode-button:hover,
+.search button:hover {
+    background-color: var(--color-hover);
 }
 
 #dark-mode-button {
     margin-right: 10px;
-}
-
-.info-button:hover, .mode-button:hover {
-    background-color: #b0dce3;
 }
 
 .button-group {
@@ -312,54 +313,41 @@ path.leaflet-interactive:focus {
     padding: 10px 20px;
 }
 
+/* Form elements */
 #search-bar {
-    border: 1px solid #ddd;
+    border: 1px solid var(--border-color);
     border-radius: 5px;
     height: 30px;
     margin-right: 10px;
     width: 100%;
 }
 
-#search-button {
-    background-color: #dcdcdc;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    color: black;
-    cursor: pointer;
-    height: 35px;
-    padding: 5px 10px;
-}
-
-.search button:hover {
-    background-color: #b0dce3;
-}
-
-#slider-container, #shade-slider-container, #pet-slider-container {
+#slider-container,
+#shade-slider-container,
+#pet-slider-container {
     left: 0;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 0 5px;
     position: relative;
     top: 0;
     z-index: 1000;
-    font-size: 0.8rem;
+    font-size: 13px;
     margin-bottom: 5px;
 }
 
-#slider-container input, #shade-slider-container input, #pet-slider-container input {
+#slider-container input,
+#shade-slider-container input,
+#pet-slider-container input {
     width: 100%;
 }
 
 .label {
     font-size: 14.4px;
     font-weight: bold;
-    margin-bottom: 5px;
-    margin-right: 10px;
-    margin-top: 5px;
+    margin: 5px 10px 5px 0;
 }
 
 .field {
-    margin-bottom: 2px;
-    margin-top: 5px;
+    margin: 5px 0 2px;
 }
 
 .is-grouped {
@@ -371,20 +359,17 @@ path.leaflet-interactive:focus {
     flex-grow: 1;
 }
 
-.select {
-    border: 1px solid #ddd;
+.select,
+.select select {
+    border: 1px solid var(--border-color);
     border-radius: 5px;
-    height: 35px;
-    margin-top: 5px;
     padding: 5px;
     width: 100%;
 }
 
-.select select {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 5px;
-    width: 100%;
+.select {
+    height: 35px;
+    margin-top: 5px;
 }
 
 .checkbox {
@@ -397,67 +382,81 @@ path.leaflet-interactive:focus {
     margin-right: 5px;
 }
 
+/* Theme styles */
+body.dark-mode,
+body.dark-mode .box,
+body.dark-mode .controls,
+body.dark-mode .info-box,
+body.dark-mode .modal-content {
+    background-color: var(--bg-dark);
+    color: var(--bg-light);
+}
 
 body.dark-mode {
     background-color: #121212;
-    color: #ffffff;
-}
-
-body.light-mode {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-body.dark-mode .box, body.dark-mode .controls, body.dark-mode .info-box, body.dark-mode .modal-content {
-    background-color: #1e1e1e;
-    color: #ffffff;
-}
-
-body.light-mode .box, body-light-mode .controls, body-light-mode .info-box, body-light-mode .modal-content {
-    background-color: #ffffff;
-    color: #000000;
 }
 
 body.dark-mode #map {
-    background-color: #1e1e1e;
+    background-color: var(--bg-dark);
 }
 
-body.light-mode #map {
-    background-color: #ffffff;
+body.dark-mode .chart-section {
+    background-color: var(--bg-dark);
 }
 
 body.dark-mode .legend .legend-item .legend-line {
     background-color: grey;
 }
 
-body.light-mode .legend .legend-item .legend-line {
-    background-color: #1e1e1e;
+body.dark-mode .chart-tick-label,
+body.dark-mode .chart-gauge-tick-label {
+    fill: var(--ct-dark);
+}
+
+body.dark-mode .chart-pointer-stroke {
+    stroke: var(--ct-dark);
+    fill: var(--ct-dark);
+}
+
+body.dark-mode .chart-tick-stroke {
+    stroke: var(--bg-dark);
+}
+
+body.light-mode,
+body.light-mode .box,
+body.light-mode .controls,
+body.light-mode .info-box,
+body.light-mode .modal-content {
+    background-color: var(--bg-light);
+    color: var(--ct-light);
+}
+
+body.light-mode #map {
+    background-color: var(--bg-light);
 }
 
 body.light-mode .chart-section {
-    background-color: #ffffff;
+    background-color: var(--bg-light);
 }
 
-body.dark-mode .chart-section {
-    background-color: #1e1e1e;
+body.light-mode .legend .legend-item .legend-line {
+    background-color: var(--bg-dark);
 }
 
-body.dark-mode .chart-tick-label, body.dark-mode .chart-pointer-stroke {
-    fill: #ffffff;
+body.light-mode .chart-tick-label {
+    fill: var(--ct-light);
 }
 
-body.light-mode .chart-tick-label, body-light-mode .chart-pointer-stroke {
-    fill: #1e1e1e;
+body.light-mode .chart-pointer-stroke {
+    stroke: var(--ct-light);
+    fill: var(--ct-light);
 }
 
-body.light-mode .chart-tick-stroke, body.dark-mode .chart-pointer-stroke {
-    stroke: #ffffff;
+body.light-mode .chart-tick-stroke {
+    stroke: var(--bg-light);
 }
 
-body.dark-mode .chart-tick-stroke, body.light-mode .chart-pointer-stroke {
-    stroke: #1e1e1e;
-}
-
+/* Modal styles */
 .modal.is-active {
     display: flex;
     align-items: center;
@@ -471,10 +470,6 @@ body.dark-mode .chart-tick-stroke, body.light-mode .chart-pointer-stroke {
 }
 
 .modal-content {
-    background: white;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     max-width: 500px;
     padding: 20px;
     position: relative;
@@ -492,8 +487,9 @@ body.dark-mode .chart-tick-stroke, body.light-mode .chart-pointer-stroke {
     z-index: 1000;
 }
 
+/* Zoom control styles */
 .leaflet-control-zoom {
     top: 50px !important;
     left: 290px !important;
-    border: #c4c4c4 !important;
+    border: var(--color-button) !important;
 }
