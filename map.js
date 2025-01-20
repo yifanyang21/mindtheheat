@@ -1,27 +1,14 @@
-// Link to dataset - GeoJSON file paths
-const GEOJSON_PATHS = {
-    NEIGHBORHOODS: 'data/buurt.geojson',
-    ALL_STREETS: 'data/filtered_4_percentage.geojson',
-    CLUSTERS: 'data/gdf_simple_clusters.geojson',
-    getBuurtPath: (buurtCode) => `data/Buurt_data/${buurtCode}.geojson`
-};
-
-// Initialize the map
 const map = L.map('map', {
     zoomControl: false,
     attributionControl: true
 }).setView([0, 0], 13);
 
-function createTileLayer(url, attribution) {
-    return L.tileLayer(url, { attribution });
-}
-
-let lightTileLayer = createTileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', 
-    '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-);
-let darkTileLayer = createTileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', 
-    '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-);
+let lightTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+});
+let darkTileLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+});
 
 lightTileLayer.addTo(map);
 
@@ -29,42 +16,20 @@ L.control.zoom({
     position: 'topleft'
 }).addTo(map);
 
-// Dark and light mode switch functions
-function switchToDarkMode() {
-    map.removeLayer(lightTileLayer);
-    darkTileLayer.addTo(map);
-}
-
-function switchToLightMode() {
-    map.removeLayer(darkTileLayer);
-    lightTileLayer.addTo(map);
-}
-
-function getBlack() {
-    return document.body.classList.contains('dark-mode') ? 'white' : 'black';
-}
-function getWhite() {
-    return document.body.classList.contains('light-mode') ? 'white' : 'black';
-}
-
-// Layer variables
 let neighborhoodLayer = null;
 let streetLayer = null;
 let clusterLayer = null;
 
-// Data variables
 let neighborhoodData = null;
 let streetNetworkData = null;
 let clusterData = null;
 let allStreetsData = null;
 
-// Load GeoJSON data
 async function loadGeoJson(url) {
     const response = await fetch(url);
     return response.json();
 }
 
-// Search and zoom functionality
 async function searchAndZoom(query) {
     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
 
@@ -84,7 +49,6 @@ async function searchAndZoom(query) {
     }
 }
 
-// Filter streets by neighborhood
 function filterStreetsByNeighborhood(neighborhood, data) {
     return turf.featureCollection(
         data.features.filter(street => {
@@ -96,7 +60,6 @@ function filterStreetsByNeighborhood(neighborhood, data) {
     );
 }
 
-// Street styles
 function getStreetColor(score) {
     if (score === null) return '#ddd';
     if (score >= 0.75) return '#FF6200';
@@ -119,23 +82,11 @@ function getStreetWeight_city(jenkins_bin) {
     return 1;
 }
 
-// Legend creation functions
-function createLegendItem(label, isFlow) {
-    const legendItem = document.createElement('div');
-    legendItem.className = 'legend-item';
-    if (isFlow) {
-        const legendLine = document.createElement('div');
-        legendLine.className = `legend-line ${label.className}`;
-        const legendText = document.createElement('span');
-        legendText.textContent = label.text;
-        legendItem.appendChild(legendLine);
-        legendItem.appendChild(legendText);
-    } else {
-        const legendText = document.createElement('span');
-        legendText.textContent = label;
-        legendItem.appendChild(legendText);
-    }
-    return legendItem;
+function getBlack() {
+    return document.body.classList.contains('dark-mode') ? 'white' : 'black';
+}
+function getWhite() {
+    return document.body.classList.contains('light-mode') ? 'white' : 'black';
 }
 
 function createLegendSection(titleText, gradientClass, labels, isFlow = false) {
@@ -156,7 +107,21 @@ function createLegendSection(titleText, gradientClass, labels, isFlow = false) {
     textContainer.className = 'legend-text-container';
 
     labels.forEach(label => {
-        textContainer.appendChild(createLegendItem(label, isFlow));
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        if (isFlow) {
+            const legendLine = document.createElement('div');
+            legendLine.className = `legend-line ${label.className}`;
+            const legendText = document.createElement('span');
+            legendText.textContent = label.text;
+            legendItem.appendChild(legendLine);
+            legendItem.appendChild(legendText);
+        } else {
+            const legendText = document.createElement('span');
+            legendText.textContent = label;
+            legendItem.appendChild(legendText);
+        }
+        textContainer.appendChild(legendItem);
     });
 
     content.appendChild(gradient);
@@ -167,7 +132,7 @@ function createLegendSection(titleText, gradientClass, labels, isFlow = false) {
     return section;
 }
 
-// Reset neighborhood styles
+
 function resetNeighborhoodStyles() {
     neighborhoodLayer.eachLayer(function (layer) {
         neighborhoodLayer.resetStyle(layer);
@@ -175,18 +140,21 @@ function resetNeighborhoodStyles() {
     });
 }
 
-// Slider and filter functionality
 let currentShadeThreshold = 0;
 let currentPetThreshold = 0.0;
 let buurtData = null;
 
-function createSliderListener(sliderId, valueId, callback) {
-    document.getElementById(sliderId).addEventListener('input', function () {
-        const value = parseFloat(this.value);
-        document.getElementById(valueId).textContent = value;
-        callback(value);
-    });
-}
+document.getElementById('shade-slider').addEventListener('input', function () {
+    currentShadeThreshold = parseFloat(this.value);
+    document.getElementById('shade-slider-value').textContent = 100 - currentShadeThreshold;
+    applyFilter();
+});
+
+document.getElementById('pet-slider').addEventListener('input', function () {
+    currentPetThreshold = parseFloat(this.value);
+    document.getElementById('pet-slider-value').textContent = currentPetThreshold;
+    applyFilter();
+});
 
 function applyFilter() {
     if (streetLayer) {
@@ -206,22 +174,29 @@ function applyFilter() {
         })
     };
 
-    const styleFunction = neighborhoodIndex === 'all' ? 
-        feature => ({
-            color: getStreetColor(feature.properties.Final_score_all),
-            weight: getStreetWeight_city(feature.properties.jenkins_bin)
-        }) : 
-        feature => ({
-            color: getStreetColor(feature.properties.Final_score_all),
-            weight: getStreetWeight_neighbor(feature.properties.jenkins_bin)
-        });
-
-    streetLayer = L.geoJSON(filteredData, { style: styleFunction }).addTo(map);
+    if (neighborhoodIndex === 'all') {
+        streetLayer = L.geoJSON(filteredData, {
+            style: function (feature) {
+                return {
+                    color: getStreetColor(feature.properties.Final_score_all),
+                    weight: getStreetWeight_city(feature.properties.jenkins_bin)
+                };
+            }
+        }).addTo(map);
+    } else {
+        streetLayer = L.geoJSON(filteredData, {
+            style: function (feature) {
+                return {
+                    color: getStreetColor(feature.properties.Final_score_all),
+                    weight: getStreetWeight_neighbor(feature.properties.jenkins_bin)
+                };
+            }
+        }).addTo(map);
+    }
 
     applyStreetInteractions();
 }
 
-// Update map based on neighborhood selection
 async function updateMap(neighborhoodIndex) {
     const clusterCheckbox = document.getElementById('cluster-checkbox');
     if (clusterCheckbox.checked && clusterData) {
@@ -247,7 +222,7 @@ async function updateMap(neighborhoodIndex) {
     } else {
         const selectedNeighborhood = neighborhoodData.features[neighborhoodIndex];
         const buurtCode = selectedNeighborhood.properties.Buurtcode;
-        buurtData = await loadGeoJson(GEOJSON_PATHS.getBuurtPath(buurtCode));
+        buurtData = await loadGeoJson(`data/Buurt_data/${buurtCode}.geojson`);
         applyFilter();
 
         const bounds = L.geoJSON(selectedNeighborhood).getBounds();
@@ -266,10 +241,19 @@ async function updateMap(neighborhoodIndex) {
     applyStreetInteractions();
 }
 
-// Initialize the map
+function switchToDarkMode() {
+    map.removeLayer(lightTileLayer);
+    darkTileLayer.addTo(map);
+}
+
+function switchToLightMode() {
+    map.removeLayer(darkTileLayer);
+    lightTileLayer.addTo(map);
+}
+
 async function initMap() {
-    neighborhoodData = await loadGeoJson(GEOJSON_PATHS.NEIGHBORHOODS);
-    allStreetsData = await loadGeoJson(GEOJSON_PATHS.ALL_STREETS);
+    neighborhoodData = await loadGeoJson('data/buurt.geojson');
+    allStreetsData = await loadGeoJson('data/filtered_4_percentage.geojson');
     neighborhoodLayer = L.geoJSON(neighborhoodData, {
         style: { color: 'grey', weight: 0.8, fillOpacity: 0.0, fillColor: getWhite() },
         onEachFeature: function (feature, layer) {
@@ -313,7 +297,7 @@ async function initMap() {
         select.appendChild(option);
     });
 
-    clusterData = await loadGeoJson(GEOJSON_PATHS.CLUSTERS);
+    clusterData = await loadGeoJson('data/gdf_simple_clusters.geojson');
 
     updateMap('all');
 
@@ -339,16 +323,6 @@ async function initMap() {
 
     searchButton.addEventListener('click', function () {
         searchAndZoom(searchBar.value);
-    });
-
-    createSliderListener('shade-slider', 'shade-slider-value', value => {
-        currentShadeThreshold = value;
-        applyFilter();
-    });
-
-    createSliderListener('pet-slider', 'pet-slider-value', value => {
-        currentPetThreshold = value;
-        applyFilter();
     });
 }
 
